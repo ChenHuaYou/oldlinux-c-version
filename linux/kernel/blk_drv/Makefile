@@ -8,11 +8,11 @@
 
 AR	=ar
 AS	=as
-LD	=ld
+LD	=ld -m elf_i386
 LDFLAGS	=-s -x
-CC	=gcc -march=i386
-CFLAGS	=-Wall -O -fstrength-reduce -fomit-frame-pointer  \
-	-finline-functions -nostdinc -I../../include -fno-stack-protector
+CC	=gcc -march=i386 -m32
+CFLAGS	=-Wall -fstrength-reduce -fomit-frame-pointer  \
+	-finline-functions -nostdinc -I../../include -fno-stack-protector -fno-builtin
 CPP	=gcc -E -nostdinc -I../../include
 
 .c.s:

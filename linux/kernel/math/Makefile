@@ -10,7 +10,7 @@ AR	=ar
 AS	=as
 LD	=ld
 LDFLAGS	=-s -x
-CC	=gcc -march=i386
+CC	=gcc -march=i386 -m32
 CFLAGS	=-Wall -O -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../../include -fno-stack-protector
 CPP	=gcc -E -nostdinc -I../../include

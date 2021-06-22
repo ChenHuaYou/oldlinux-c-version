@@ -40,6 +40,7 @@
 
 #define MAJOR_NR 2
 #include "blk.h"
+inline void do_fd_request(void);
 
 static int recalibrate = 0;
 static int reset = 0;
@@ -266,7 +267,7 @@ static void rw_interrupt(void)
 	do_fd_request();
 }
 
-inline void setup_rw_floppy(void)
+static inline void setup_rw_floppy(void)
 {
 	setup_DMA();
 	do_floppy = rw_interrupt;
@@ -414,7 +415,7 @@ static void floppy_on_interrupt(void)
 		transfer();
 }
 
-void do_fd_request(void)
+inline void do_fd_request(void)
 {
 	unsigned int block;
 

@@ -1,9 +1,9 @@
 AR	=ar
 AS	=as
-CC	=gcc -march=i386
-LD	=ld
+CC	=gcc -march=i386 -m32
+LD	=ld -m elf_i386
 CFLAGS	=-Wall -fstrength-reduce -fomit-frame-pointer \
-	 -nostdinc -I../include -fno-stack-protector
+	 -nostdinc -I../include -fno-stack-protector -fno-builtin
 CPP	=gcc -E -nostdinc -I../include
 
 .c.s:
