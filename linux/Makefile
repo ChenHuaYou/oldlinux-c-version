@@ -20,7 +20,8 @@ CPP	=cpp -nostdinc -Iinclude
 # This can be either FLOPPY, /dev/xxxx or empty, in which case the
 # default of /dev/hd6 is used by 'build'.
 #
-ROOT_DEV= #FLOPPY 
+ROOT_DEV=#/dev/loop0
+#ROOT_DEV=#FLOPPY
 
 ARCHIVES=kernel/kernel.o mm/mm.o fs/fs.o
 DRIVERS =kernel/blk_drv/blk_drv.a kernel/chr_drv/chr_drv.a
@@ -41,15 +42,21 @@ all:	Image
 Image: boot/bootsect boot/setup tools/system tools/build
 	objcopy -O binary -R .note -R .comment tools/system tools/kernel
 	tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV) > Image
+	#gdb --args tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV)
 	rm tools/kernel -f
 	sync
 
 disk: Image
-	dd bs=8192 if=Image of=/dev/fd0
+	dd bs=8192 if=Image of=../tools/bootimage-0.11-hd
+
+debug:
+	objcopy -O binary -R .note -R .comment tools/system tools/kernel
+	gdb --args tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV)
+	
 
 tools/build: tools/build.c
 	gcc $(CFLAGS) \
-	-o tools/build tools/build.c
+	-g -o tools/build tools/build.c
 
 boot/head.o: boot/head.s
 	gcc -m32 -I./include -traditional -c boot/head.s

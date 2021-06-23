@@ -36,8 +36,8 @@
 
 #define SYS_SIZE 0x3000
 
-#define DEFAULT_MAJOR_ROOT 2
-#define DEFAULT_MINOR_ROOT 0x1d
+#define DEFAULT_MAJOR_ROOT 3
+#define DEFAULT_MINOR_ROOT 1
 
 /* max nr of sectors of setup: don't change unless you also change
  * bootsect etc */
@@ -74,6 +74,7 @@ int main(int argc, char ** argv)
 			}
 			major_root = MAJOR(sb.st_rdev);
 			minor_root = MINOR(sb.st_rdev);
+            fprintf(stderr,"hello\n");
 		} else {
 			major_root = 0;
 			minor_root = 0;
