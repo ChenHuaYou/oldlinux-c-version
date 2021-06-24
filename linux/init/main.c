@@ -42,6 +42,7 @@ static inline _syscall0(int,sync)
 static char printbuf[1024];
 
 extern int vsprintf();
+static int printf(const char *fmt, ...);
 extern void init(void);
 extern void blk_dev_init(void);
 extern void chr_dev_init(void);
@@ -101,12 +102,13 @@ static long main_memory_start = 0;
 
 struct drive_info { char dummy[32]; } drive_info;
 
-void main(void)		/* This really IS void, no error here. */
+void kmain(void)		/* This really IS void, no error here. */
 {			/* The startup routine assumes (well, ...) this */
 /*
  * Interrupts are still disabled. Do necessary setups, then
  * enable them
  */
+    printf("go in main ..\n");
  	ROOT_DEV = ORIG_ROOT_DEV;
  	drive_info = DRIVE_INFO;
 	memory_end = (1<<20) + (EXT_MEM_K<<10);

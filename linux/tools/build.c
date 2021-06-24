@@ -32,6 +32,7 @@
 #define MINOR(a) ((a)&0xff)
 
 #define MINIX_HEADER 32
+//now elf header size is 4KB
 #define GCC_HEADER 1024
 
 #define SYS_SIZE 0x3000
@@ -154,13 +155,14 @@ int main(int argc, char ** argv)
 			die("Write call failed");
 		i += c;
 	}
+    //printf("i now is: %d\n",i);
 	
 	if ((id=open(argv[3],O_RDONLY,0))<0)
 		die("Unable to open 'system'");
-//	if (read(id,buf,GCC_HEADER) != GCC_HEADER)
-//		die("Unable to read header of 'system'");
-//	if (((long *) buf)[5] != 0)
-//		die("Non-GCC header of 'system'");
+    //if (read(id,buf,GCC_HEADER) != GCC_HEADER)
+    //    die("Unable to read header of 'system'");
+	//if (((int *) buf)[6] != 0)
+	//	die("Non-GCC header of 'system'");
 	for (i=0 ; (c=read(id,buf,sizeof buf))>0 ; i+=c )
 		if (write(1,buf,c)!=c)
 			die("Write call failed");

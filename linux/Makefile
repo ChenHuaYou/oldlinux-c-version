@@ -7,9 +7,9 @@ RAMDISK =  #-DRAMDISK=512
 AS86	=as86 -0 -a
 LD86	=ld86 -0
 
-AS	=as
+AS	=as --32
 LD	=ld
-LDFLAGS	=-m elf_i386 -Ttext 0 -e startup_32
+LDFLAGS	=-m elf_i386 -Ttext 0 -e fuckup
 CC	=gcc -m32 -march=i386 $(RAMDISK)
 CFLAGS	=-Wall -O2 -fomit-frame-pointer -fno-stack-protector -fno-builtin
 
@@ -32,7 +32,7 @@ LIBS	=lib/lib.a
 	$(CC) $(CFLAGS) \
 	-nostdinc -Iinclude -S -o $*.s $<
 .s.o:
-	$(AS)  -o $*.o $<
+	$(AS) -c -o $*.o $<
 .c.o:
 	$(CC) $(CFLAGS) \
 	-nostdinc -Iinclude -c -o $*.o $<
@@ -42,9 +42,9 @@ all:	Image
 Image: boot/bootsect boot/setup tools/system tools/build
 	objcopy -O binary -R .note -R .comment tools/system tools/kernel
 	tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV) > Image
-	#gdb --args tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV)
 	rm tools/kernel -f
 	sync
+	dd bs=8192 if=Image of=../tools/bootimage-0.11-hd
 
 disk: Image
 	dd bs=8192 if=Image of=../tools/bootimage-0.11-hd
@@ -59,8 +59,6 @@ tools/build: tools/build.c
 	-g -o tools/build tools/build.c
 
 boot/head.o: boot/head.s
-	gcc -m32 -I./include -traditional -c boot/head.s
-	mv head.o boot/
 
 tools/system:	boot/head.o init/main.o \
 		$(ARCHIVES) $(DRIVERS) $(MATH) $(LIBS)

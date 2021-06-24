@@ -68,15 +68,15 @@ nr_system_calls = 72
 .globl hd_interrupt,floppy_interrupt,parallel_interrupt
 .globl device_not_available, coprocessor_error
 
-.align 2
+.align 4
 bad_sys_call:
 	movl $-1,%eax
 	iret
-.align 2
+.align 4
 reschedule:
 	pushl $ret_from_sys_call
 	jmp schedule
-.align 2
+.align 4
 system_call:
 	cmpl $nr_system_calls-1,%eax
 	ja bad_sys_call
@@ -127,7 +127,7 @@ ret_from_sys_call:
 	pop %ds
 	iret
 
-.align 2
+.align 4
 coprocessor_error:
 	push %ds
 	push %es
@@ -144,7 +144,7 @@ coprocessor_error:
 	pushl $ret_from_sys_call
 	jmp math_error
 
-.align 2
+.align 4
 device_not_available:
 	push %ds
 	push %es
@@ -172,7 +172,7 @@ device_not_available:
 	popl %ebp
 	ret
 
-.align 2
+.align 4
 timer_interrupt:
 	push %ds		# save ds,es and put kernel data space
 	push %es		# into them. %fs is used by _system_call
@@ -196,7 +196,7 @@ timer_interrupt:
 	addl $4,%esp		# task switching to accounting ...
 	jmp ret_from_sys_call
 
-.align 2
+.align 4
 sys_execve:
 	lea EIP(%esp),%eax
 	pushl %eax
@@ -204,7 +204,7 @@ sys_execve:
 	addl $4,%esp
 	ret
 
-.align 2
+.align 4
 sys_fork:
 	call find_empty_process
 	testl %eax,%eax

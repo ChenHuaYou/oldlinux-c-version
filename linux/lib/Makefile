@@ -7,7 +7,7 @@
 #
 
 AR	=ar
-AS	=as
+AS	=as --32
 LD	=ld
 LDFLAGS	=-s -x
 CC	=gcc -march=i386 -m32
@@ -19,7 +19,7 @@ CPP	=gcc -E -nostdinc -I../include
 	$(CC) $(CFLAGS) \
 	-S -o $*.s $<
 .s.o:
-	$(AS) -o $*.o $<
+	$(AS) -c -o $*.o $<
 .c.o:
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<

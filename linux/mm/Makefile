@@ -11,7 +11,7 @@ CPP	=gcc -E -nostdinc -I../include
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<
 .s.o:
-	$(AS) -o $*.o $<
+	$(AS) -c -o $*.o $<
 .c.s:
 	$(CC) $(CFLAGS) \
 	-S -o $*.s $<
