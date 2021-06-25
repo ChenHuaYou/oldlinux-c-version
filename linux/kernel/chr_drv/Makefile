@@ -12,7 +12,7 @@ AS	=as --32
 LDFLAGS	=-s -x
 CC	=gcc -march=i386 -m32
 CFLAGS	=-Wall -fstrength-reduce -fomit-frame-pointer \
-	-finline-functions -nostdinc -I../../include -fno-stack-protector
+	-finline-functions -nostdinc -I../../include -fno-stack-protector -g
 CPP	=gcc -E -nostdinc -I../../include
 
 .c.s:
