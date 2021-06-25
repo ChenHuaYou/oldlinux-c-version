@@ -1,1 +1,1 @@
-bochsdbg -q -f tools/bochsrc-hd.bxrc
+bochs -q -f tools/bochsrc-hd.bxrc
