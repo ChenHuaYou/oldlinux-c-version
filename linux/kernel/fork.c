@@ -118,9 +118,11 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none,
 		free_page((long) p);
 		return -EAGAIN;
 	}
-	for (i=0; i<NR_OPEN;i++)
-		if ((f=p->filp[i]))
-			f->f_count++;
+    for (i=0; i<NR_OPEN;i++){
+        if ((f=p->filp[i])){
+            f->f_count++;
+        }
+    }
 	if (current->pwd)
 		current->pwd->i_count++;
 	if (current->root)

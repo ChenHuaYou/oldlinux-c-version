@@ -300,6 +300,7 @@ void do_hd_request(void)
 
 	INIT_REQUEST;
 	dev = MINOR(CURRENT->dev);
+	//dev = 0x1;
 	block = CURRENT->sector;
 	if (dev >= 5*NR_HD || block+2 > hd[dev].nr_sects) {
 		end_request(0);

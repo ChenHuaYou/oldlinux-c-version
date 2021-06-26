@@ -121,6 +121,7 @@ void kmain(void)		/* This really IS void, no error here. */
  */
     sprintf(term, "TERM=con%dx%d",CON_COLS, CON_ROWS);
  	ROOT_DEV = ORIG_ROOT_DEV;
+ 	//ROOT_DEV = 0x301;
  	drive_info = DRIVE_INFO;
 	memory_end = (1<<20) + (EXT_MEM_K<<10);
 	memory_end &= 0xfffff000;
@@ -148,9 +149,11 @@ void kmain(void)		/* This really IS void, no error here. */
 	floppy_init();
 	sti();
 	move_to_user_mode();
-	if (!fork()) {		/* we count on this going ok */
+    int pid = fork();
+	if (pid != 0) {		/* we count on this going ok */
 		init();
 	}
+    init();
 /*
  *   NOTE!!   For any other task 'pause()' would mean we have to get a
  * signal to awaken, but task0 is the sole exception (see 'schedule()')
