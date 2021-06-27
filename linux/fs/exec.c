@@ -104,7 +104,7 @@ static int count(char ** argv)
 static unsigned long copy_strings(int argc,char ** argv,unsigned long *page,
 		unsigned long p, int from_kmem)
 {
-	char *tmp, *pag=NULL;
+	char *tmp, *pag=(char *)NULL;
 	int len, offset = 0;
 	unsigned long old_fs, new_fs;
 
@@ -135,7 +135,7 @@ static unsigned long copy_strings(int argc,char ** argv,unsigned long *page,
 				offset = p % PAGE_SIZE;
 				if (from_kmem==2)
 					set_fs(old_fs);
-				if (!(pag = (char *) page[p/PAGE_SIZE]) && !(pag = (char *) (page[p/PAGE_SIZE] = (unsigned long *)get_free_page()))) 
+				if (!(pag = (char *) page[p/PAGE_SIZE]) && !(pag = (char *) (page[p/PAGE_SIZE] = (unsigned long)get_free_page()))) 
 					return 0;
 				if (from_kmem==2)
 					set_fs(new_fs);
@@ -177,6 +177,9 @@ static unsigned long change_ldt(unsigned long text_size,unsigned long * page)
 /*
  * 'do_execve()' executes a new program.
  */
+extern "C"
+int do_execve(unsigned long * eip,long tmp,char * filename,
+	char ** argv, char ** envp);
 int do_execve(unsigned long * eip,long tmp,char * filename,
 	char ** argv, char ** envp)
 {
@@ -318,7 +321,7 @@ restart_interp:
 		iput(current->executable);
 	current->executable = inode;
 	for (i=0 ; i<32 ; i++)
-		current->sigaction[i].sa_handler = NULL;
+		current->sigaction[i].sa_handler = (void (*)(int))NULL;
 	for (i=0 ; i<NR_OPEN ; i++)
 		if ((current->close_on_exec>>i)&1)
 			sys_close(i);
@@ -326,7 +329,7 @@ restart_interp:
 	free_page_tables(get_base(current->ldt[1]),get_limit(0x0f));
 	free_page_tables(get_base(current->ldt[2]),get_limit(0x17));
 	if (last_task_used_math == current)
-		last_task_used_math = NULL;
+		last_task_used_math = (struct task_struct *)NULL;
 	current->used_math = 0;
 	p += change_ldt(ex.a_text,page)-MAX_ARG_PAGES*PAGE_SIZE;
 	p = (unsigned long) create_tables((char *)p,argc,envc);

@@ -29,7 +29,7 @@ static void cp_stat(struct m_inode * inode, struct stat * statbuf)
 	tmp.st_atime = inode->i_atime;
 	tmp.st_mtime = inode->i_mtime;
 	tmp.st_ctime = inode->i_ctime;
-	for (i=0 ; i<sizeof (tmp) ; i++)
+	for (i=0 ; i<(int)sizeof(tmp) ; i++)
 		put_fs_byte(((char *) &tmp)[i],&((char *) statbuf)[i]);
 }
 

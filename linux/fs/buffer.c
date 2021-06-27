@@ -33,7 +33,7 @@ extern void invalidate_inodes(int);
 struct buffer_head * start_buffer = (struct buffer_head *) &end;
 struct buffer_head * hash_table[NR_HASH];
 static struct buffer_head * free_list;
-static struct task_struct * buffer_wait = NULL;
+static struct task_struct * buffer_wait = (struct task_struct *)NULL;
 int NR_BUFFERS = 0;
 
 static inline void wait_on_buffer(struct buffer_head * bh)
@@ -157,8 +157,8 @@ static inline void insert_into_queues(struct buffer_head * bh)
 	free_list->b_prev_free->b_next_free = bh;
 	free_list->b_prev_free = bh;
 /* put the buffer in new hash-queue if it has a device */
-	bh->b_prev = NULL;
-	bh->b_next = NULL;
+	bh->b_prev = (struct buffer_head *)NULL;
+	bh->b_next = (struct buffer_head *)NULL;
 	if (!bh->b_dev)
 		return;
 	bh->b_next = hash(bh->b_dev,bh->b_blocknr);
@@ -171,9 +171,9 @@ static struct buffer_head * find_buffer(int dev, int block)
 	struct buffer_head * tmp;
 
 	for (tmp = hash(dev,block) ; tmp != NULL ; tmp = tmp->b_next)
-		if (tmp->b_dev==dev && tmp->b_blocknr==block)
+		if (tmp->b_dev==dev && (int)tmp->b_blocknr==block)
 			return tmp;
-	return NULL;
+	return (struct buffer_head *)NULL;
 }
 
 /*
@@ -189,10 +189,10 @@ struct buffer_head * get_hash_table(int dev, int block)
 
 	for (;;) {
 		if (!(bh=find_buffer(dev,block)))
-			return NULL;
+			return (struct buffer_head *)NULL;
 		bh->b_count++;
 		wait_on_buffer(bh);
-		if (bh->b_dev == dev && bh->b_blocknr == block)
+		if (bh->b_dev == dev && (int)bh->b_blocknr == block)
 			return bh;
 		bh->b_count--;
 	}
@@ -280,7 +280,7 @@ struct buffer_head * bread(int dev,int block)
 	if (bh->b_uptodate)
 		return bh;
 	brelse(bh);
-	return NULL;
+	return (struct buffer_head *)NULL;
 }
 
 #define COPYBLK(from,to) \
@@ -307,7 +307,7 @@ void bread_page(unsigned long address,int dev,int b[4])
 				if (!bh[i]->b_uptodate)
 					ll_rw_block(READ,bh[i]);
 		} else
-			bh[i] = NULL;
+			bh[i] = (struct buffer_head *)NULL;
 	for (i=0 ; i<4 ; i++,address += BLOCK_SIZE)
 		if (bh[i]) {
 			wait_on_buffer(bh[i]);
@@ -345,40 +345,40 @@ struct buffer_head * breada(int dev,int first, ...)
 	if (bh->b_uptodate)
 		return bh;
 	brelse(bh);
-	return (NULL);
+	return (struct buffer_head *)NULL;
 }
 
 void buffer_init(long buffer_end)
 {
 	struct buffer_head * h = start_buffer;
-	void * b;
+	char * b;
 	int i;
 
 	if (buffer_end == 1<<20)
-		b = (void *) (640*1024);
+		b = (char *) (640*1024);
 	else
-		b = (void *) buffer_end;
-	while ( (b -= BLOCK_SIZE) >= ((void *) (h+1)) ) {
+		b = (char *) buffer_end;
+	while ( (b -= BLOCK_SIZE) >= ((char *) (h+1)) ) {
 		h->b_dev = 0;
 		h->b_dirt = 0;
 		h->b_count = 0;
 		h->b_lock = 0;
 		h->b_uptodate = 0;
-		h->b_wait = NULL;
-		h->b_next = NULL;
-		h->b_prev = NULL;
+		h->b_wait = (struct task_struct *)NULL;
+		h->b_next = (struct buffer_head *)NULL;
+		h->b_prev = (struct buffer_head *)NULL;
 		h->b_data = (char *) b;
 		h->b_prev_free = h-1;
 		h->b_next_free = h+1;
 		h++;
 		NR_BUFFERS++;
-		if (b == (void *) 0x100000)
-			b = (void *) 0xA0000;
+		if (b == (char *) 0x100000)
+			b = (char *) 0xA0000;
 	}
 	h--;
 	free_list = start_buffer;
 	free_list->b_prev_free = h;
 	h->b_next_free = free_list;
 	for (i=0;i<NR_HASH;i++)
-		hash_table[i]=NULL;
+		hash_table[i]=(struct buffer_head *)NULL;
 }	

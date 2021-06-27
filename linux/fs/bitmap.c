@@ -141,7 +141,7 @@ struct m_inode * new_inode(int dev)
 	int i,j;
 
 	if (!(inode=get_empty_inode()))
-		return NULL;
+		return (struct m_inode *)NULL;
 	if (!(sb = get_super(dev)))
 		panic("new_inode with unknown device");
 	j = 8192;
@@ -151,7 +151,7 @@ struct m_inode * new_inode(int dev)
 				break;
 	if (!bh || j >= 8192 || j+i*8192 > sb->s_ninodes) {
 		iput(inode);
-		return NULL;
+		return (struct m_inode *)NULL;
 	}
 	if (set_bit(j,bh->b_data))
 		panic("new_inode: bit already set");

@@ -105,9 +105,9 @@ static struct buffer_head * find_entry(struct m_inode ** dir,
 		namelen = NAME_LEN;
 #endif
 	entries = (*dir)->i_size / (sizeof (struct dir_entry));
-	*res_dir = NULL;
+	*res_dir = (struct dir_entry *)NULL;
 	if (!namelen)
-		return NULL;
+		return (struct buffer_head *)NULL;
 /* check for '..', as we might have to do some "magic" for it */
 	if (namelen==2 && get_fs_byte(name)=='.' && get_fs_byte(name+1)=='.') {
 /* '..' in a pseudo-root results in a faked '.' (just change namelen) */
@@ -125,15 +125,15 @@ static struct buffer_head * find_entry(struct m_inode ** dir,
 		}
 	}
 	if (!(block = (*dir)->i_zone[0]))
-		return NULL;
+		return (struct buffer_head *)NULL;
 	if (!(bh = bread((*dir)->i_dev,block)))
-		return NULL;
+		return (struct buffer_head *)NULL;
 	i = 0;
 	de = (struct dir_entry *) bh->b_data;
 	while (i < entries) {
 		if ((char *)de >= BLOCK_SIZE+bh->b_data) {
 			brelse(bh);
-			bh = NULL;
+			bh = (struct buffer_head *)NULL;
 			if (!(block = bmap(*dir,i/DIR_ENTRIES_PER_BLOCK)) ||
 			    !(bh = bread((*dir)->i_dev,block))) {
 				i += DIR_ENTRIES_PER_BLOCK;
@@ -149,7 +149,7 @@ static struct buffer_head * find_entry(struct m_inode ** dir,
 		i++;
 	}
 	brelse(bh);
-	return NULL;
+	return (struct buffer_head *)NULL;
 }
 
 /*
@@ -169,7 +169,7 @@ static struct buffer_head * add_entry(struct m_inode * dir,
 	struct buffer_head * bh;
 	struct dir_entry * de;
 
-	*res_dir = NULL;
+	*res_dir = (struct dir_entry *)NULL;
 #ifdef NO_TRUNCATE
 	if (namelen > NAME_LEN)
 		return NULL;
@@ -178,20 +178,20 @@ static struct buffer_head * add_entry(struct m_inode * dir,
 		namelen = NAME_LEN;
 #endif
 	if (!namelen)
-		return NULL;
+		return (struct buffer_head *)NULL;
 	if (!(block = dir->i_zone[0]))
-		return NULL;
+		return (struct buffer_head *)NULL;
 	if (!(bh = bread(dir->i_dev,block)))
-		return NULL;
+		return (struct buffer_head *)NULL;
 	i = 0;
 	de = (struct dir_entry *) bh->b_data;
 	while (1) {
 		if ((char *)de >= BLOCK_SIZE+bh->b_data) {
 			brelse(bh);
-			bh = NULL;
+			bh = (struct buffer_head *)NULL;
 			block = create_block(dir,i/DIR_ENTRIES_PER_BLOCK);
 			if (!block)
-				return NULL;
+				return (struct buffer_head *)NULL;
 			if (!(bh = bread(dir->i_dev,block))) {
 				i += DIR_ENTRIES_PER_BLOCK;
 				continue;
@@ -216,7 +216,7 @@ static struct buffer_head * add_entry(struct m_inode * dir,
 		i++;
 	}
 	brelse(bh);
-	return NULL;
+	return (struct buffer_head *)NULL;
 }
 
 /*
@@ -244,13 +244,13 @@ static struct m_inode * get_dir(const char * pathname)
 	} else if (c)
 		inode = current->pwd;
 	else
-		return NULL;	/* empty name is bad */
+		return (struct m_inode *)NULL;	/* empty name is bad */
 	inode->i_count++;
 	while (1) {
 		thisname = pathname;
 		if (!S_ISDIR(inode->i_mode) || !permission(inode,MAY_EXEC)) {
 			iput(inode);
-			return NULL;
+			return (struct m_inode *)NULL;
 		}
 		for(namelen=0;(c=get_fs_byte(pathname++))&&(c!='/');namelen++)
 			/* nothing */ ;
@@ -258,14 +258,14 @@ static struct m_inode * get_dir(const char * pathname)
 			return inode;
 		if (!(bh = find_entry(&inode,thisname,namelen,&de))) {
 			iput(inode);
-			return NULL;
+			return (struct m_inode *)NULL;
 		}
 		inr = de->inode;
 		idev = inode->i_dev;
 		brelse(bh);
 		iput(inode);
 		if (!(inode = iget(idev,inr)))
-			return NULL;
+			return (struct m_inode *)NULL;
 	}
 }
 
@@ -283,7 +283,7 @@ static struct m_inode * dir_namei(const char * pathname,
 	struct m_inode * dir;
 
 	if (!(dir = get_dir(pathname)))
-		return NULL;
+		return (struct m_inode *)NULL;
 	basename = pathname;
 	while ((c=get_fs_byte(pathname++)))
 		if (c=='/')
@@ -309,13 +309,13 @@ struct m_inode * namei(const char * pathname)
 	struct dir_entry * de;
 
 	if (!(dir = dir_namei(pathname,&namelen,&basename)))
-		return NULL;
+		return (struct m_inode *)NULL;
 	if (!namelen)			/* special case: '/usr/' etc */
 		return dir;
 	bh = find_entry(&dir,basename,namelen,&de);
 	if (!bh) {
 		iput(dir);
-		return NULL;
+		return (struct m_inode *)NULL;
 	}
 	inr = de->inode;
 	dev = dir->i_dev;

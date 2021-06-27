@@ -58,7 +58,7 @@ static int get_termios(struct tty_struct * tty, struct termios * termios)
 	int i;
 
 	verify_area(termios, sizeof (*termios));
-	for (i=0 ; i< (sizeof (*termios)) ; i++)
+	for (i=0 ; i< (int)sizeof(*termios) ; i++)
 		put_fs_byte( ((char *)&tty->termios)[i] , i+(char *)termios );
 	return 0;
 }
@@ -67,7 +67,7 @@ static int set_termios(struct tty_struct * tty, struct termios * termios)
 {
 	int i;
 
-	for (i=0 ; i< (sizeof (*termios)) ; i++)
+	for (i=0 ; i< (int)sizeof(*termios); i++)
 		((char *)&tty->termios)[i]=get_fs_byte(i+(char *)termios);
 	change_speed(tty);
 	return 0;
@@ -86,7 +86,7 @@ static int get_termio(struct tty_struct * tty, struct termio * termio)
 	tmp_termio.c_line = tty->termios.c_line;
 	for(i=0 ; i < NCC ; i++)
 		tmp_termio.c_cc[i] = tty->termios.c_cc[i];
-	for (i=0 ; i< (sizeof (*termio)) ; i++)
+	for (i=0 ; i< (int)sizeof(*termio) ; i++)
 		put_fs_byte( ((char *)&tmp_termio)[i] , i+(char *)termio );
 	return 0;
 }
@@ -99,7 +99,7 @@ static int set_termio(struct tty_struct * tty, struct termio * termio)
 	int i;
 	struct termio tmp_termio;
 
-	for (i=0 ; i< (sizeof (*termio)) ; i++)
+	for (i=0 ; i< (int)sizeof(*termio) ; i++)
 		((char *)&tmp_termio)[i]=get_fs_byte(i+(char *)termio);
 	*(unsigned short *)&tty->termios.c_iflag = tmp_termio.c_iflag;
 	*(unsigned short *)&tty->termios.c_oflag = tmp_termio.c_oflag;

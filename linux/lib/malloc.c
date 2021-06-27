@@ -125,7 +125,7 @@ void *malloc(unsigned int len)
 	 * for this request.
 	 */
 	for (bdir = bucket_dir; bdir->size; bdir++)
-		if (bdir->size >= len)
+		if (bdir->size >= (int)len)
 			break;
 	if (!bdir->size) {
 		printk("malloc called with impossibly large argument (%d)\n",

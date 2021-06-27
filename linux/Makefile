@@ -10,10 +10,10 @@ LD86	=ld86 -0
 AS	=as --32
 LD	=ld
 LDFLAGS	=-m elf_i386 -Ttext 0 -e fuckup
-CC	=gcc -m32 -march=i386 $(RAMDISK)
+CC	=g++ -m32 -march=i386 $(RAMDISK)
 CFLAGS	=-Wall -O0 -fomit-frame-pointer -fno-stack-protector -fno-builtin -g
 
-CPP	=cpp -nostdinc -Iinclude
+#CPP	=cpp -nostdinc -Iinclude
 
 #
 # ROOT_DEV specifies the default root-device when making the image.

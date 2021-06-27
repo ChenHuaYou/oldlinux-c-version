@@ -155,7 +155,7 @@ int sys_open(const char * filename,int flag,int mode)
 		return -EINVAL;
 	(current->filp[fd]=f)->f_count++;
 	if ((i=open_namei(filename,flag,mode,&inode))<0) {
-		current->filp[fd]=NULL;
+		current->filp[fd]=(struct file *)NULL;
 		f->f_count=0;
 		return i;
 	}
@@ -169,7 +169,7 @@ int sys_open(const char * filename,int flag,int mode)
 		} else if (MAJOR(inode->i_zone[0])==5)
 			if (current->tty<0) {
 				iput(inode);
-				current->filp[fd]=NULL;
+				current->filp[fd]=(struct file*)NULL;
 				f->f_count=0;
 				return -EPERM;
 			}
@@ -199,7 +199,7 @@ int sys_close(unsigned int fd)
 	current->close_on_exec &= ~(1<<fd);
 	if (!(filp = current->filp[fd]))
 		return -EINVAL;
-	current->filp[fd] = NULL;
+	current->filp[fd] = (struct file*)NULL;
 	if (filp->f_count == 0)
 		panic("Close: file count is 0");
 	if (--filp->f_count)

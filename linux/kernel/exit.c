@@ -100,6 +100,7 @@ static void tell_father(int pid)
 	release(current);
 }
 
+extern "C"
 int do_exit(long code)
 {
 	int i;

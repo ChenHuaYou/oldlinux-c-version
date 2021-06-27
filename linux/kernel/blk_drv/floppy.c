@@ -351,6 +351,7 @@ static void recal_interrupt(void)
 	do_fd_request();
 }
 
+extern "C"
 void unexpected_floppy_interrupt(void)
 {
 	output_byte(FD_SENSEI);

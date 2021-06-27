@@ -3,21 +3,21 @@
         "arguments": [
             "c++",
             "-c",
-            "-m32",
             "-march=i386",
+            "-m32",
             "-Wall",
-            "-O0",
+            "-fstrength-reduce",
             "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
             "-fno-stack-protector",
             "-fno-builtin",
             "-g",
-            "-nostdinc",
-            "-Iinclude",
             "-o",
-            "init/main.o",
-            "init/main.c"
+            "buffer.o",
+            "buffer.c"
         ],
-        "directory": "/home/chen/workspace/oldlinux-cpp-version/linux",
-        "file": "init/main.c"
+        "directory": "/home/chen/workspace/oldlinux-cpp-version/linux/fs",
+        "file": "buffer.c"
     }
 ]

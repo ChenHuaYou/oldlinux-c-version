@@ -58,7 +58,7 @@ struct super_block * get_super(int dev)
 	struct super_block * s;
 
 	if (!dev)
-		return NULL;
+		return (struct super_block *)NULL;
 	s = 0+super_block;
 	while (s < NR_SUPER+super_block)
 		if (s->s_dev == dev) {
@@ -68,7 +68,7 @@ struct super_block * get_super(int dev)
 			s = 0+super_block;
 		} else
 			s++;
-	return NULL;
+	return (struct super_block *)NULL;
 }
 
 void put_super(int dev)
@@ -104,19 +104,19 @@ static struct super_block * read_super(int dev)
 	int i,block;
 
 	if (!dev)
-		return NULL;
+		return (struct super_block *)NULL;
 	check_disk_change(dev);
 	if ((s = get_super(dev)))
 		return s;
 	for (s = 0+super_block ;; s++) {
 		if (s >= NR_SUPER+super_block)
-			return NULL;
+			return (struct super_block *)NULL;
 		if (!s->s_dev)
 			break;
 	}
 	s->s_dev = dev;
-	s->s_isup = NULL;
-	s->s_imount = NULL;
+	s->s_isup = (struct m_inode *)NULL;
+	s->s_imount = (struct m_inode *)NULL;
 	s->s_time = 0;
 	s->s_rd_only = 0;
 	s->s_dirt = 0;
@@ -124,7 +124,7 @@ static struct super_block * read_super(int dev)
 	if (!(bh = bread(dev,1))) {
 		s->s_dev=0;
 		free_super(s);
-		return NULL;
+		return (struct super_block *)NULL;
 	}
 	*((struct d_super_block *) s) =
 		*((struct d_super_block *) bh->b_data);
@@ -132,12 +132,12 @@ static struct super_block * read_super(int dev)
 	if (s->s_magic != SUPER_MAGIC) {
 		s->s_dev = 0;
 		free_super(s);
-		return NULL;
+		return (struct super_block *)NULL;
 	}
 	for (i=0;i<I_MAP_SLOTS;i++)
-		s->s_imap[i] = NULL;
+		s->s_imap[i] = (struct buffer_head *)NULL;
 	for (i=0;i<Z_MAP_SLOTS;i++)
-		s->s_zmap[i] = NULL;
+		s->s_zmap[i] = (struct buffer_head *)NULL;
 	block=2;
 	for (i=0 ; i < s->s_imap_blocks ; i++)
 		if ((s->s_imap[i]=bread(dev,block)))
@@ -156,7 +156,7 @@ static struct super_block * read_super(int dev)
 			brelse(s->s_zmap[i]);
 		s->s_dev=0;
 		free_super(s);
-		return NULL;
+		return (struct super_block *)NULL;
 	}
 	s->s_imap[0]->b_data[0] |= 1;
 	s->s_zmap[0]->b_data[0] |= 1;
@@ -189,9 +189,9 @@ int sys_umount(char * dev_name)
 				return -EBUSY;
 	sb->s_imount->i_mount=0;
 	iput(sb->s_imount);
-	sb->s_imount = NULL;
+	sb->s_imount = (struct m_inode *)NULL;
 	iput(sb->s_isup);
-	sb->s_isup = NULL;
+	sb->s_isup = (struct m_inode *)NULL;
 	put_super(dev);
 	sync_dev(dev);
 	return 0;
@@ -256,7 +256,7 @@ void mount_root(void)
 	for(p = &super_block[0] ; p < &super_block[NR_SUPER] ; p++) {
 		p->s_dev = 0;
 		p->s_lock = 0;
-		p->s_wait = NULL;
+		p->s_wait = (struct task_struct *)NULL;
 	}
 	if (!(p=read_super(ROOT_DEV)))
 		panic("Unable to mount root");

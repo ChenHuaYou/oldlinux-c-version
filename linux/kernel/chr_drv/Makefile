@@ -13,7 +13,7 @@ LDFLAGS	=-s -x
 CC	=g++ -march=i386 -m32
 CFLAGS	=-Wall -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../../include -fno-stack-protector -g
-CPP	=gcc -E -nostdinc -I../../include
+CPP	=g++ -E -nostdinc -I../../include
 
 .c.s:
 	$(CC) $(CFLAGS) \

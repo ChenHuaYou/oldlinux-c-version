@@ -90,14 +90,14 @@ int sys_pipe(unsigned long * fildes)
 			j++;
 		}
 	if (j==1)
-		current->filp[fd[0]]=NULL;
+		current->filp[fd[0]]=(struct file *)NULL;
 	if (j<2) {
 		f[0]->f_count=f[1]->f_count=0;
 		return -1;
 	}
 	if (!(inode=get_pipe_inode())) {
 		current->filp[fd[0]] =
-			current->filp[fd[1]] = NULL;
+			current->filp[fd[1]] = (struct file *)NULL;
 		f[0]->f_count = f[1]->f_count = 0;
 		return -1;
 	}

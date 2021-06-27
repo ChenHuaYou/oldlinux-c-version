@@ -42,7 +42,7 @@ static inline __attribute__((always_inline)) _syscall0(int,sync)
 
 static char printbuf[1024];
 
-extern int vsprintf();
+extern int vsprintf(char * buf, const char * fmt, va_list args);
 static int printf(const char *fmt, ...);
 extern void init(void);
 extern void blk_dev_init(void);
@@ -116,6 +116,8 @@ struct drive_info {
     char dummy[32]; 
 } drive_info;
 
+extern "C" void kmain(void);
+
 void kmain(void)		/* This really IS void, no error here. */
 {			/* The startup routine assumes (well, ...) this */
 /*
@@ -178,11 +180,11 @@ static int printf(const char *fmt, ...)
 	return i;
 }
 
-static char * argv_rc[] = { "/bin/sh", NULL };
-static char * envp_rc[] = { "HOME=/", NULL };
+static char * argv_rc[] = { (char*)"/bin/sh", (char*)NULL };
+static char * envp_rc[] = { (char*)"HOME=/", (char*)NULL };
 
-static char * argv[] = { "-/bin/sh",NULL };
-static char * envp[] = { "HOME=/usr/root", NULL };
+static char * argv[] = { (char*)"-/bin/sh",(char*)NULL };
+static char * envp[] = { (char*)"HOME=/usr/root", (char*)NULL };
 
 void init(void)
 {

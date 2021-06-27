@@ -14,11 +14,11 @@
 
 #include <linux/kernel.h>
 
+
+int vsprintf(char * buf, const char * fmt, va_list args);
 static char buf[1024];
 
-extern int vsprintf(char * buf, const char * fmt, va_list args);
-
-int printk(const char *fmt, ...)
+extern "C" int printk(const char *fmt, ...)
 {
 	va_list args;
 	int i;
@@ -27,15 +27,15 @@ int printk(const char *fmt, ...)
 	i=vsprintf(buf,fmt,args);
 	va_end(args);
 	__asm__("push %%fs\n\t"
-		"push %%ds\n\t"
-		"pop %%fs\n\t"
-		"pushl %0\n\t"
-		"pushl $buf\n\t"
-		"pushl $0\n\t"
-		"call tty_write\n\t"
-		"addl $8,%%esp\n\t"
-		"popl %0\n\t"
-		"pop %%fs"
+		"push %%ds\n"
+		"pop %%fs\n"
+		"pushl %0\n"
+		"pushl $buf\n"
+		"pushl $0\n"
+		"call tty_write\n"
+		"addl $8,%%esp\n"
+		"popl %0\n"
+		"pop %%fs\n"
 		::"r" (i):"ax","cx","dx");
 	return i;
 }

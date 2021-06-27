@@ -4,6 +4,7 @@
  *  (C) 1991  Linus Torvalds
  */
 
+#include "linux/fs.h"
 #include <string.h> 
 #include <sys/stat.h>
 
@@ -198,7 +199,7 @@ struct m_inode * get_empty_inode(void)
 	int i;
 
 	do {
-		inode = NULL;
+		inode = (struct m_inode*)NULL;
 		for (i = NR_INODE; i ; i--) {
 			if (++last_inode >= inode_table + NR_INODE)
 				last_inode = inode_table;
@@ -220,7 +221,7 @@ struct m_inode * get_empty_inode(void)
 			wait_on_inode(inode);
 		}
 	} while (inode->i_count);
-	memset(inode,0,sizeof(*inode));
+	memset((char *)inode,0,sizeof(*inode));
 	inode->i_count = 1;
 	return inode;
 }
@@ -230,10 +231,10 @@ struct m_inode * get_pipe_inode(void)
 	struct m_inode * inode;
 
 	if (!(inode = get_empty_inode()))
-		return NULL;
+		return (struct m_inode*)NULL;
 	if (!(inode->i_size=get_free_page())) {
 		inode->i_count = 0;
-		return NULL;
+		return (struct m_inode*)NULL;
 	}
 	inode->i_count = 2;	/* sum of readers/writers */
 	PIPE_HEAD(*inode) = PIPE_TAIL(*inode) = 0;
@@ -283,7 +284,7 @@ struct m_inode * iget(int dev,int nr)
 		return inode;
 	}
 	if (!empty)
-		return (NULL);
+		return (struct m_inode*)NULL;
 	inode=empty;
 	inode->i_dev = dev;
 	inode->i_num = nr;

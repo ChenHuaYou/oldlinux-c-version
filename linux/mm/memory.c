@@ -90,7 +90,7 @@ return __res;
 void free_page(unsigned long addr)
 {
 	if (addr < LOW_MEM) return;
-	if (addr >= HIGH_MEMORY)
+	if (addr >= (unsigned long)HIGH_MEMORY)
 		panic("trying to free nonexistent page");
 	addr -= LOW_MEM;
 	addr >>= 12;
@@ -201,7 +201,7 @@ unsigned long put_page(unsigned long page,unsigned long address)
 
 /* NOTE !!! This uses the fact that _pg_dir=0 */
 
-	if (page < LOW_MEM || page >= HIGH_MEMORY)
+	if (page < LOW_MEM || page >= (unsigned long)HIGH_MEMORY)
 		printk("Trying to put page %p at %p\n",page,address);
 	if (mem_map[(page-LOW_MEM)>>12] != 1)
 		printk("mem_map disagrees with %p at %p\n",page,address);
@@ -312,7 +312,7 @@ static int try_to_share(unsigned long address, struct task_struct * p)
 	if ((phys_addr & 0x41) != 0x01)
 		return 0;
 	phys_addr &= 0xfffff000;
-	if (phys_addr >= HIGH_MEMORY || phys_addr < LOW_MEM)
+	if (phys_addr >= (unsigned long)HIGH_MEMORY || phys_addr < LOW_MEM)
 		return 0;
 	to = *(unsigned long *) to_page;
 	if (!(to & 1)) {

@@ -30,7 +30,7 @@ extern int copy_page_tables(unsigned long from, unsigned long to, long size);
 extern int free_page_tables(unsigned long from, unsigned long size);
 
 extern void sched_init(void);
-extern void schedule(void);
+extern "C" void schedule(void);
 extern void trap_init(void);
 #ifndef PANIC
 volatile void panic(const char * str);

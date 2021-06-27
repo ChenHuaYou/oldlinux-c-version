@@ -48,8 +48,8 @@ void show_stat(void)
 
 extern void mem_use(void);
 
-extern int timer_interrupt(void);
-extern int system_call(void);
+extern "C" int timer_interrupt(void);
+extern "C" int system_call(void);
 
 union task_union {
 	struct task_struct task;
@@ -76,7 +76,7 @@ extern "C" struct {
  *  'math_state_restore()' saves the current math information in the
  * old math state array, and gets the new ones from the current task
  */
-void math_state_restore()
+extern "C" void math_state_restore()
 {
 	if (last_task_used_math == current)
 		return;
@@ -304,11 +304,12 @@ void add_timer(long jiffies, void (*fn)(void))
 	sti();
 }
 
-void do_timer(long cpl)
+extern "C" void sysbeepstop(void);
+extern "C" void do_timer(long cpl)
 {
     //printk("do_timer .....");
 	extern int beepcount;
-	extern void sysbeepstop(void);
+//	extern void sysbeepstop(void);
 
 	if (beepcount)
 		if (!--beepcount)

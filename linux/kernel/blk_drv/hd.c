@@ -235,6 +235,7 @@ static void reset_hd(int nr)
 		hd_info[nr].cyl,WIN_SPECIFY,&recal_intr);
 }
 
+extern "C"
 void unexpected_hd_interrupt(void)
 {
 	printk("Unexpected HD interrupt\n\r");

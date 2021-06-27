@@ -17,14 +17,14 @@ typedef int (*ioctl_ptr)(int dev,int cmd,int arg);
 #define NRDEVS ((sizeof (ioctl_table))/(sizeof (ioctl_ptr)))
 
 static ioctl_ptr ioctl_table[]={
-	NULL,		/* nodev */
-	NULL,		/* /dev/mem */
-	NULL,		/* /dev/fd */
-	NULL,		/* /dev/hd */
+	(ioctl_ptr)NULL,		/* nodev */
+	(ioctl_ptr)NULL,		/* /dev/mem */
+	(ioctl_ptr)NULL,		/* /dev/fd */
+	(ioctl_ptr)NULL,		/* /dev/hd */
 	tty_ioctl,	/* /dev/ttyx */
 	tty_ioctl,	/* /dev/tty */
-	NULL,		/* /dev/lp */
-	NULL};		/* named pipes */
+	(ioctl_ptr)NULL,		/* /dev/lp */
+	(ioctl_ptr)NULL};		/* named pipes */
 	
 
 int sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)

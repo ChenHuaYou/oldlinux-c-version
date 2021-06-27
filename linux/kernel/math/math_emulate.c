@@ -15,7 +15,7 @@
 #include <linux/kernel.h>
 #include <asm/segment.h>
 
-void math_emulate(long edi, long esi, long ebp, long sys_call_ret,
+extern "C" void math_emulate(long edi, long esi, long ebp, long sys_call_ret,
 	long eax,long ebx,long ecx,long edx,
 	unsigned short fs,unsigned short es,unsigned short ds,
 	unsigned long eip,unsigned short cs,unsigned long eflags,
@@ -34,7 +34,7 @@ void math_emulate(long edi, long esi, long ebp, long sys_call_ret,
 	current->signal |= 1<<(SIGFPE-1);
 }
 
-void math_error(void)
+extern "C" void math_error(void)
 {
 	__asm__("fnclex");
 	if (last_task_used_math)

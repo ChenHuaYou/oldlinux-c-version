@@ -83,15 +83,16 @@ static int rw_memory(int rw, unsigned minor, char * buf, int count, off_t * pos)
 #define NRDEVS ((sizeof (crw_table))/(sizeof (crw_ptr)))
 
 static crw_ptr crw_table[]={
-	NULL,		/* nodev */
-	rw_memory,	/* /dev/mem etc */
-	NULL,		/* /dev/fd */
-	NULL,		/* /dev/hd */
-	rw_ttyx,	/* /dev/ttyx */
-	rw_tty,		/* /dev/tty */
-	NULL,		/* /dev/lp */
-	NULL};		/* unnamed pipes */
+    (crw_ptr)NULL,		/* nodev */
+    rw_memory,	/* /dev/mem etc */
+    (crw_ptr)NULL,		/* /dev/fd */
+    (crw_ptr)NULL,		/* /dev/hd */
+    rw_ttyx,	/* /dev/ttyx */
+    rw_tty,		/* /dev/tty */
+    (crw_ptr)NULL,		/* /dev/lp */
+    (crw_ptr)NULL /* unnamed pipes */
 
+};		
 int rw_char(int rw,int dev, char * buf, int count, off_t * pos)
 {
 	crw_ptr call_addr;

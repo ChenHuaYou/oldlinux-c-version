@@ -26,7 +26,7 @@ int file_read(struct m_inode * inode, struct file * filp, char * buf, int count)
 			if (!(bh=bread(inode->i_dev,nr)))
 				break;
 		} else
-			bh = NULL;
+			bh = (struct buffer_head *)NULL;
 		nr = filp->f_pos % BLOCK_SIZE;
 		chars = MIN( BLOCK_SIZE-nr , left );
 		filp->f_pos += chars;
@@ -72,7 +72,7 @@ int file_write(struct m_inode * inode, struct file * filp, char * buf, int count
 		c = BLOCK_SIZE-c;
 		if (c > count-i) c = count-i;
 		pos += c;
-		if (pos > inode->i_size) {
+		if (pos > (int)inode->i_size) {
 			inode->i_size = pos;
 			inode->i_dirt = 1;
 		}

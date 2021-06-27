@@ -82,7 +82,7 @@ static void sysbeep(void);
  * this is what the terminal answers to a ESC-Z or csi0c
  * query (= vt100 response).
  */
-#define RESPONSE "\033[?1;2c"
+#define RESPONSE (char *)"\033[?1;2c"
 
 /* NOTE! gotoxy thinks x==video_num_columns is ok */
 static inline void gotoxy(unsigned int new_x,unsigned int new_y)
@@ -302,7 +302,7 @@ void csi_m(void)
 {
 	int i;
 
-	for (i=0;i<=npar;i++)
+	for (i=0;i<=(int)npar;i++)
 		switch (par[i]) {
 			case 0:attr=0x07;break;
 			case 1:attr=0x0f;break;
@@ -341,7 +341,7 @@ static void insert_char(void)
 	unsigned short tmp, old = video_erase_char;
 	unsigned short * p = (unsigned short *) pos;
 
-	while (i++<video_num_columns) {
+	while (i++<(int)video_num_columns) {
 		tmp=*p;
 		*p=old;
 		old=tmp;
@@ -370,7 +370,7 @@ static void delete_char(void)
 	if (x>=video_num_columns)
 		return;
 	i = x;
-	while (++i < video_num_columns) {
+	while (++i < (int)video_num_columns) {
 		*p = *(p+1);
 		p++;
 	}
@@ -619,7 +619,7 @@ void con_write(struct tty_struct * tty)
 void con_init(void)
 {
 	register unsigned char a;
-	char *display_desc = "????";
+	char *display_desc = (char *)"????";
 	char *display_ptr;
 
 	video_num_columns = ORIG_VIDEO_COLS;
@@ -637,13 +637,13 @@ void con_init(void)
 		{
 			video_type = VIDEO_TYPE_EGAM;
 			video_mem_end = 0xb8000;
-			display_desc = "EGAm";
+			display_desc = (char *)"EGAm";
 		}
 		else
 		{
 			video_type = VIDEO_TYPE_MDA;
 			video_mem_end	= 0xb2000;
-			display_desc = "*MDA";
+			display_desc = (char *)"*MDA";
 		}
 	}
 	else								/* If not, it is color. */
@@ -655,13 +655,13 @@ void con_init(void)
 		{
 			video_type = VIDEO_TYPE_EGAC;
 			video_mem_end = 0xbc000;
-			display_desc = "EGAc";
+			display_desc = (char *)"EGAc";
 		}
 		else
 		{
 			video_type = VIDEO_TYPE_CGA;
 			video_mem_end = 0xba000;
-			display_desc = "*CGA";
+			display_desc = (char *)"*CGA";
 		}
 	}
 
@@ -690,7 +690,7 @@ void con_init(void)
 }
 /* from bsd-net-2: */
 
-void sysbeepstop(void)
+extern "C" void sysbeepstop(void)
 {
 	/* disable counter 2 */
 	outb(inb_p(0x61)&0xFC, 0x61);
