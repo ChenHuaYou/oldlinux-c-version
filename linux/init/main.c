@@ -20,10 +20,11 @@
  * won't be any messing with the stack from main(), but we define
  * some others too.
  */
-static inline _syscall0(int,fork)
-static inline _syscall0(int,pause)
-static inline _syscall1(int,setup,void *,BIOS)
-static inline _syscall0(int,sync)
+//static inline __attribute__((always_inline)) _syscall0(int,fork)
+_syscall0(int,fork)
+static inline __attribute__((always_inline)) _syscall0(int,pause)
+static inline __attribute__((always_inline)) _syscall1(int,setup,void *,BIOS)
+static inline __attribute__((always_inline)) _syscall0(int,sync)
 
 #include <linux/tty.h>
 #include <linux/sched.h>
@@ -111,7 +112,9 @@ static long buffer_memory_end = 0;
 static long main_memory_start = 0;
 static char term[32];
 
-struct drive_info { char dummy[32]; } drive_info;
+struct drive_info { 
+    char dummy[32]; 
+} drive_info;
 
 void kmain(void)		/* This really IS void, no error here. */
 {			/* The startup routine assumes (well, ...) this */
@@ -150,10 +153,10 @@ void kmain(void)		/* This really IS void, no error here. */
 	sti();
 	move_to_user_mode();
     int pid = fork();
-	if (pid != 0) {		/* we count on this going ok */
+	if (pid==0) {		/* we count on this going ok */
 		init();
 	}
-    init();
+    //init();
 /*
  *   NOTE!!   For any other task 'pause()' would mean we have to get a
  * signal to awaken, but task0 is the sole exception (see 'schedule()')
@@ -185,6 +188,7 @@ void init(void)
 {
 	int pid,i;
 
+    printf("entering init\n");
 	setup((void *) &drive_info);
 	(void) open("/dev/tty0",O_RDWR,0);
 	(void) dup(0);

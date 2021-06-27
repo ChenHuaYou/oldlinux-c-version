@@ -94,7 +94,7 @@ extern struct task_struct * wait_for_request;
 #define CURRENT_DEV DEVICE_NR(CURRENT->dev)
 
 #ifdef DEVICE_INTR
-void (*DEVICE_INTR)(void) = NULL;
+void (*DEVICE_INTR)(void) = (void (*)())NULL;
 #endif
 static void (DEVICE_REQUEST)(void);
 

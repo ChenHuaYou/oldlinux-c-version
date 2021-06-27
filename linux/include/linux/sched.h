@@ -113,27 +113,55 @@ struct task_struct {
  * your own risk!. Base=0, limit=0x9ffff (=640kB)
  */
 #define INIT_TASK \
-/* state etc */	{ 0,15,15, \
-/* signals */	0,{{},},0, \
-/* ec,brk... */	0,0,0,0,0,0, \
-/* pid etc.. */	0,-1,0,0,0, \
-/* uid etc */	0,0,0,0,0,0, \
-/* alarm */	0,0,0,0,0,0, \
-/* math */	0, \
-/* fs info */	-1,0022,NULL,NULL,NULL,0, \
-/* filp */	{NULL,}, \
-	{ \
-		{0,0}, \
-/* ldt */	{0x9f,0xc0fa00}, \
-		{0x9f,0xc0f200}, \
-	}, \
-/*tss*/	{0,PAGE_SIZE+(long)&init_task,0x10,0,0,0,0,(long)&pg_dir,\
-	 0,0,0,0,0,0,0,0, \
-	 0,0,0x17,0x17,0x17,0x17,0x17,0x17, \
-	 _LDT(0),0x80000000, \
-		{} \
-	}, \
-}
+    /* state etc */	{ (long)0, \
+        /*counter*/ (long)15, \
+        /*priority*/ (long)15, \
+        /* signals */ (long)0, \
+        /* sigaction */ {{},}, \
+        /* blocked */ (long)0, \
+        /* exit_code*/	(int)0, \
+        /* start_code etc..*/(unsigned long)0,(unsigned long)0,(unsigned long)0,(unsigned long)0,(unsigned long)0, \
+        /* pid etc.. */	(long)0,(long)-1,(long)0,(long)0,(long)0, \
+        /* uid etc.. */	(unsigned short)0,(unsigned short)0,(unsigned short)0, \
+        /* gid etc ..*/ (unsigned short)0,(unsigned short)0,(unsigned short)0, \
+        /* alarm */	0, \
+        /* utime etc..*/ (long)0,(long)0,(long)0,(long)0,(long)0, \
+        /* math */	(unsigned short)0, \
+        /* tty */ (int)-1, \
+        /* umask */ (unsigned short)22, \
+        /* pwd */ (struct m_inode*)NULL, \
+        /* root */ (struct m_inode*)NULL, \
+        /* executable */ (struct m_inode*)NULL, \
+        /* close_on_exec */ (unsigned long)0, \
+        /* filp */	{(struct file*)NULL,}, \
+        /* ldt */{{0,0},{0x9f,0xc0fa00},{0x9f,0xc0f200}}, \
+        /* tss */{ \
+            /*back_link*/ 0, \
+            /*esp0*/ (long)PAGE_SIZE+(long)&init_task, \
+            /*ss0*/ 0x10, \
+            /*esp1*/ 0, \
+            /*ss1*/ 0, \
+            /*esp2*/ 0, \
+            /*ss2*/ 0, \
+            /*cr3*/ (long)&pg_dir,\
+            /*eip*/ 0, \
+            /*eflags*/ 0, \
+            /*eax etc..*/ 0,0,0,0, \
+            /*esp*/ 0, \
+            /*ebp*/ 0, \
+            /*esi*/ 0, \
+            /*edi*/ 0, \
+            /*es*/ 0x17, \
+            /*cs*/ 0x17, \
+            /*ss*/ 0x17, \
+            /*ds*/ 0x17, \
+            /*fs*/ 0x17, \
+            /*gs*/ 0x17, \
+            /*ldt*/ _LDT(0), \
+            /*trace_bitmap*/ (long)0x80000000, \
+            /*i387_struct*/ {} \
+        } \
+    }
 
 extern struct task_struct *task[NR_TASKS];
 extern struct task_struct *last_task_used_math;

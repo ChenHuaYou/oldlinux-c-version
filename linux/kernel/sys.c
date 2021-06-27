@@ -221,8 +221,8 @@ int sys_uname(struct utsname * name)
 	int i;
 
 	if (!name) return -ERROR;
-	verify_area(name,sizeof *name);
-	for(i=0;i<sizeof *name;i++)
+	verify_area(name,sizeof(*name));
+	for(i=0;i<(int)sizeof(*name);i++)
 		put_fs_byte(((char *) &thisname)[i],i+(char *) name);
 	return 0;
 }

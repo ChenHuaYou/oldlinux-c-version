@@ -94,46 +94,47 @@ int sys_setup(void * BIOS)
 	else
 		NR_HD=1;
 #endif
-	for (i=0 ; i<NR_HD ; i++) {
+    //hd_info[0].sect = (unsigned char)0x26;
+	for (i=0 ; i<(int)NR_HD ; i++) {
 		hd[i*5].start_sect = 0;
 		hd[i*5].nr_sects = hd_info[i].head*
 				hd_info[i].sect*hd_info[i].cyl;
-	}
+    }
 
-	/*
-		We querry CMOS about hard disks : it could be that 
-		we have a SCSI/ESDI/etc controller that is BIOS
-		compatable with ST-506, and thus showing up in our
-		BIOS table, but not register compatable, and therefore
-		not present in CMOS.
+    /*
+       We querry CMOS about hard disks : it could be that 
+       we have a SCSI/ESDI/etc controller that is BIOS
+       compatable with ST-506, and thus showing up in our
+       BIOS table, but not register compatable, and therefore
+       not present in CMOS.
 
-		Furthurmore, we will assume that our ST-506 drives
-		<if any> are the primary drives in the system, and 
-		the ones reflected as drive 1 or 2.
+       Furthurmore, we will assume that our ST-506 drives
+       <if any> are the primary drives in the system, and 
+       the ones reflected as drive 1 or 2.
 
-		The first drive is stored in the high nibble of CMOS
-		byte 0x12, the second in the low nibble.  This will be
-		either a 4 bit drive type or 0xf indicating use byte 0x19 
-		for an 8 bit type, drive 1, 0x1a for drive 2 in CMOS.
+       The first drive is stored in the high nibble of CMOS
+       byte 0x12, the second in the low nibble.  This will be
+       either a 4 bit drive type or 0xf indicating use byte 0x19 
+       for an 8 bit type, drive 1, 0x1a for drive 2 in CMOS.
 
-		Needless to say, a non-zero value means we have 
-		an AT controller hard disk for that drive.
+       Needless to say, a non-zero value means we have 
+       an AT controller hard disk for that drive.
 
-		
-	*/
 
-	if ((cmos_disks = CMOS_READ(0x12)) & 0xf0)
-		if (cmos_disks & 0x0f)
-			NR_HD = 2;
-		else
-			NR_HD = 1;
-	else
-		NR_HD = 0;
-	for (i = NR_HD ; i < 2 ; i++) {
+*/
+
+    //	if ((cmos_disks = CMOS_READ(0x12)) & 0xf0)
+    //		if (cmos_disks & 0x0f)
+    //			NR_HD = 2;
+    //		else
+    //			NR_HD = 1;
+    //	else
+    //		NR_HD = 0;
+    for (i = NR_HD ; i < 2 ; i++) {
 		hd[i*5].start_sect = 0;
 		hd[i*5].nr_sects = 0;
 	}
-	for (drive=0 ; drive<NR_HD ; drive++) {
+	for (drive=0 ; drive<(int)NR_HD ; drive++) {
 		if (!(bh = bread(0x300 + drive*5,0))) {
 			printk("Unable to read partition table of drive %d\n\r",
 				drive);
@@ -144,7 +145,7 @@ int sys_setup(void * BIOS)
 			printk("Bad partition table on drive %d\n\r",drive);
 			panic("");
 		}
-		p = 0x1BE + (void *)bh->b_data;
+		p = (partition *)(0x1BE + (char *)bh->b_data);
 		for (i=1;i<5;i++,p++) {
 			hd[i+5*drive].start_sect = p->start_sect;
 			hd[i+5*drive].nr_sects = p->nr_sects;
@@ -302,7 +303,7 @@ void do_hd_request(void)
 	dev = MINOR(CURRENT->dev);
 	//dev = 0x1;
 	block = CURRENT->sector;
-	if (dev >= 5*NR_HD || block+2 > hd[dev].nr_sects) {
+	if (dev >= 5*(int)NR_HD || (int)block+2 > hd[dev].nr_sects) {
 		end_request(0);
 		goto repeat;
 	}

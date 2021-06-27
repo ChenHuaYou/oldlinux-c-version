@@ -60,7 +60,7 @@ void reserved(void);
 void parallel_interrupt(void);
 void irq13(void);
 
-static void die(char * str,long esp_ptr,long nr)
+static void die(const char * str,long esp_ptr,long nr)
 {
 	long * esp = (long *) esp_ptr;
 	int i;

@@ -45,4 +45,6 @@
  leave HD_TYPE undefined. This is the normal thing to do.
 */
 
+#define HD_TYPE { 16, 38, 410, 0, 0, 0 }
 #endif
+

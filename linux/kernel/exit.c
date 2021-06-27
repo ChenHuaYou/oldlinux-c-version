@@ -4,6 +4,7 @@
  *  (C) 1991  Linus Torvalds
  */
 
+#include "linux/fs.h"
 #include <errno.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -24,7 +25,7 @@ void release(struct task_struct * p)
 		return;
 	for (i=1 ; i<NR_TASKS ; i++)
 		if (task[i]==p) {
-			task[i]=NULL;
+			task[i]=(struct task_struct*)NULL;
 			free_page((long)p);
 			schedule();
 			return;
@@ -115,15 +116,15 @@ int do_exit(long code)
 		if (current->filp[i])
 			sys_close(i);
 	iput(current->pwd);
-	current->pwd=NULL;
+	current->pwd=(struct m_inode*)NULL;
 	iput(current->root);
-	current->root=NULL;
+	current->root=(struct m_inode*)NULL;
 	iput(current->executable);
-	current->executable=NULL;
+	current->executable=(struct m_inode*)NULL;
 	if (current->leader && current->tty >= 0)
 		tty_table[current->tty].pgrp = 0;
 	if (last_task_used_math == current)
-		last_task_used_math = NULL;
+		last_task_used_math = (struct task_struct*)NULL;
 	if (current->leader)
 		kill_session();
 	current->state = TASK_ZOMBIE;

@@ -1,0 +1,23 @@
+[
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../../include",
+            "-fno-stack-protector",
+            "-g",
+            "-o",
+            "tty_io.o",
+            "tty_io.c"
+        ],
+        "directory": "/home/chen/workspace/oldlinux-cpp-version/linux/kernel/chr_drv",
+        "file": "tty_io.c"
+    }
+]

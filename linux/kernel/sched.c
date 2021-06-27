@@ -10,6 +10,7 @@
  * call functions (type getpid(), which just extracts a field from
  * current-task
  */
+#include "linux/fs.h"
 #include <linux/sched.h>
 #include <linux/kernel.h>
 #include <linux/sys.h>
@@ -60,13 +61,14 @@ static union task_union init_task = {INIT_TASK,};
 long volatile jiffies=0;
 long startup_time=0;
 struct task_struct *current = &(init_task.task);
-struct task_struct *last_task_used_math = NULL;
+struct task_struct *last_task_used_math = (struct task_struct*)NULL;
 
 struct task_struct * task[NR_TASKS] = {&(init_task.task), };
 
 long user_stack [ PAGE_SIZE>>2 ] ;
 
-struct {
+
+extern "C" struct {
 	long * a;
 	short b;
 	} stack_start = { & user_stack [PAGE_SIZE>>2] , 0x10 };
@@ -180,7 +182,7 @@ repeat:	current->state = TASK_INTERRUPTIBLE;
 		(**p).state=0;
 		goto repeat;
 	}
-	*p=NULL;
+	*p=(struct task_struct*)NULL;
 	if (tmp)
 		tmp->state=0;
 }
@@ -189,7 +191,7 @@ void wake_up(struct task_struct **p)
 {
 	if (p && *p) {
 		(**p).state=0;
-		*p=NULL;
+		*p=(struct task_struct*)NULL;
 	}
 }
 
@@ -198,7 +200,7 @@ void wake_up(struct task_struct **p)
  * proper. They are here because the floppy needs a timer, and this
  * was the easiest way of doing it.
  */
-static struct task_struct * wait_motor[4] = {NULL,NULL,NULL,NULL};
+static struct task_struct * wait_motor[4] = {(struct task_struct*)NULL,(struct task_struct*)NULL,(struct task_struct*)NULL,(struct task_struct*)NULL};
 static int  mon_timer[4]={0,0,0,0};
 static int moff_timer[4]={0,0,0,0};
 unsigned char current_DOR = 0x0C;
@@ -267,7 +269,7 @@ static struct timer_list {
 	long jiffies;
 	void (*fn)();
 	struct timer_list * next;
-} timer_list[TIME_REQUESTS], * next_timer = NULL;
+} timer_list[TIME_REQUESTS], * next_timer = (struct timer_list*)NULL;
 
 void add_timer(long jiffies, void (*fn)(void))
 {
@@ -304,6 +306,7 @@ void add_timer(long jiffies, void (*fn)(void))
 
 void do_timer(long cpl)
 {
+    //printk("do_timer .....");
 	extern int beepcount;
 	extern void sysbeepstop(void);
 
@@ -322,7 +325,7 @@ void do_timer(long cpl)
 			void (*fn)(void);
 			
 			fn = next_timer->fn;
-			next_timer->fn = NULL;
+			next_timer->fn = (void (*)())NULL;
 			next_timer = next_timer->next;
 			(fn)();
 		}
@@ -393,7 +396,7 @@ void sched_init(void)
 	set_ldt_desc(gdt+FIRST_LDT_ENTRY,&(init_task.task.ldt));
 	p = gdt+2+FIRST_TSS_ENTRY;
 	for(i=1;i<NR_TASKS;i++) {
-		task[i] = NULL;
+		task[i] = (struct task_struct*)NULL;
 		p->a=p->b=0;
 		p++;
 		p->a=p->b=0;

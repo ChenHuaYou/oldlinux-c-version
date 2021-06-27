@@ -2,7 +2,7 @@
 #define _STRING_H_
 
 #ifndef NULL
-#define NULL ((void *) 0)
+#define NULL ((char *) 0)
 #endif
 
 #ifndef _SIZE_T
@@ -333,7 +333,7 @@ __asm__("testl %1,%1\n\t"
 return __res;
 }
 
-static inline void * memcpy(void * dest,const void * src, int n)
+static inline char * memcpy(char * dest,const char * src, int n)
 {
 __asm__("cld\n\t"
 	"rep\n\t"
@@ -343,24 +343,25 @@ __asm__("cld\n\t"
 return dest;
 }
 
-static inline void * memmove(void * dest,const void * src, int n)
+static inline char * memmove(char * dest,const char * src, int n)
 {
-if (dest<src)
-__asm__("cld\n\t"
-	"rep\n\t"
-	"movsb"
-	::"c" (n),"S" (src),"D" (dest)
-	);
-else
-__asm__("std\n\t"
-	"rep\n\t"
-	"movsb"
-	::"c" (n),"S" (src+n-1),"D" (dest+n-1)
-	);
-return dest;
+    if (dest<src)
+        __asm__("cld\n"
+                "rep\n"
+                "movsb"
+                ::"c" (n),"S" (src),"D" (dest)
+               );
+    else
+        __asm__("std\n"
+                "rep\n"
+                "movsb\n"
+                "cld"
+                ::"c" (n),"S" (src+n-1),"D" (dest+n-1)
+               );
+    return dest;
 }
 
-static inline int memcmp(const void * cs,const void * ct,int count)
+static inline int memcmp(const char * cs,const char * ct,int count)
 {
 register int __res ;
 __asm__("cld\n\t"
@@ -376,9 +377,9 @@ __asm__("cld\n\t"
 return __res;
 }
 
-static inline void * memchr(const void * cs,char c,int count)
+static inline char * memchr(const char * cs,char c,int count)
 {
-register void * __res ;
+register char * __res ;
 if (!count)
 	return NULL;
 __asm__("cld\n\t"
@@ -392,7 +393,7 @@ __asm__("cld\n\t"
 return __res;
 }
 
-static inline void * memset(void * s,char c,int count)
+static inline char * memset(char * s,char c,int count)
 {
 __asm__("cld\n\t"
 	"rep\n\t"

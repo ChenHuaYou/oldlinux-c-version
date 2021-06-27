@@ -30,7 +30,7 @@ static inline void save_old(char * from,char * to)
 	int i;
 
 	verify_area(to, sizeof(struct sigaction));
-	for (i=0 ; i< sizeof(struct sigaction) ; i++) {
+	for (i=0 ; i< (int)sizeof(struct sigaction) ; i++) {
 		put_fs_byte(*from,to);
 		from++;
 		to++;
@@ -41,7 +41,7 @@ static inline void get_new(char * from,char * to)
 {
 	int i;
 
-	for (i=0 ; i< sizeof(struct sigaction) ; i++)
+	for (i=0 ; i< (int)sizeof(struct sigaction) ; i++)
 		*(to++) = get_fs_byte(from++);
 }
 
@@ -100,7 +100,7 @@ void do_signal(long signr,long eax, long ebx, long ecx, long edx,
 			do_exit(1<<(signr-1));
 	}
 	if (sa->sa_flags & SA_ONESHOT)
-		sa->sa_handler = NULL;
+		sa->sa_handler = (void (*)(int))NULL;
 	*(&eip) = sa_handler;
 	longs = (sa->sa_flags & SA_NOMASK)?7:8;
 	*(&esp) -= longs;

@@ -10,6 +10,7 @@
  * Fork is rather simple, once you get the hang of it, but the memory
  * management can be a bitch. See 'mm/mm.c': 'copy_page_tables()'
  */
+#include "linux/fs.h"
 #include <errno.h>
 
 #include <linux/sched.h>
@@ -79,6 +80,7 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none,
 	if (!p)
 		return -EAGAIN;
 	task[nr] = p;
+    //__asm__ volatile("cld");
 	*p = *current;	/* NOTE! this doesn't copy the supervisor stack */
 	p->state = TASK_UNINTERRUPTIBLE;
 	p->pid = last_pid;
@@ -114,7 +116,7 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none,
 	if (last_task_used_math == current)
 		__asm__("clts ; fnsave %0"::"m" (p->tss.i387));
 	if (copy_mem(nr,p)) {
-		task[nr] = NULL;
+		task[nr] = (struct task_struct*)NULL;
 		free_page((long) p);
 		return -EAGAIN;
 	}

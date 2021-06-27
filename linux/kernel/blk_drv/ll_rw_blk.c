@@ -13,6 +13,7 @@
 #include <asm/system.h>
 
 #include "blk.h"
+#include "linux/fs.h"
 
 /*
  * The request-struct contains all necessary data
@@ -23,20 +24,20 @@ struct request request[NR_REQUEST];
 /*
  * used to wait on when there are no free requests
  */
-struct task_struct * wait_for_request = NULL;
+struct task_struct * wait_for_request = (task_struct *)NULL;
 
 /* blk_dev_struct is:
  *	do_request-address
  *	next-request
  */
 struct blk_dev_struct blk_dev[NR_BLK_DEV] = {
-	{ NULL, NULL },		/* no_dev */
-	{ NULL, NULL },		/* dev mem */
-	{ NULL, NULL },		/* dev fd */
-	{ NULL, NULL },		/* dev hd */
-	{ NULL, NULL },		/* dev ttyx */
-	{ NULL, NULL },		/* dev tty */
-	{ NULL, NULL }		/* dev lp */
+	{ (void (*)())NULL, (struct request *)NULL },		/* no_dev */
+	{ (void (*)())NULL, (struct request *)NULL },		/* dev mem */
+	{ (void (*)())NULL, (struct request *)NULL },		/* dev fd */
+	{ (void (*)())NULL, (struct request *)NULL },		/* dev hd */
+	{ (void (*)())NULL, (struct request *)NULL },		/* dev ttyx */
+	{ (void (*)())NULL, (struct request *)NULL },		/* dev tty */
+	{ (void (*)())NULL, (struct request *)NULL }		/* dev lp */
 };
 
 static inline void lock_buffer(struct buffer_head * bh)
@@ -65,7 +66,7 @@ static void add_request(struct blk_dev_struct * dev, struct request * req)
 {
 	struct request * tmp;
 
-	req->next = NULL;
+	req->next = (struct request *)NULL;
 	cli();
 	if (req->bh)
 		req->bh->b_dirt = 0;
@@ -136,9 +137,9 @@ repeat:
 	req->sector = bh->b_blocknr<<1;
 	req->nr_sectors = 2;
 	req->buffer = bh->b_data;
-	req->waiting = NULL;
+	req->waiting = (struct task_struct *)NULL;
 	req->bh = bh;
-	req->next = NULL;
+	req->next = (struct request *)NULL;
 	add_request(major+blk_dev,req);
 }
 
@@ -160,6 +161,6 @@ void blk_dev_init(void)
 
 	for (i=0 ; i<NR_REQUEST ; i++) {
 		request[i].dev = -1;
-		request[i].next = NULL;
+		request[i].next = (struct request *)NULL;
 	}
 }
