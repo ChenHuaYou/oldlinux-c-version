@@ -35,7 +35,7 @@ extern void trap_init(void);
 #ifndef PANIC
 volatile void panic(const char * str);
 #endif
-extern int tty_write(unsigned minor,char * buf,int count);
+extern "C" int tty_write(unsigned minor,char * buf,int count);
 
 typedef int (*fn_ptr)();
 

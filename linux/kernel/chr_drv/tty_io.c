@@ -288,6 +288,7 @@ int tty_read(unsigned channel, char * buf, int nr)
 	return (b-buf);
 }
 
+extern "C"
 int tty_write(unsigned channel, char * buf, int nr)
 {
 	static int cr_flag=0;

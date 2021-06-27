@@ -18,7 +18,7 @@
 int vsprintf(char * buf, const char * fmt, va_list args);
 static char buf[1024];
 
-extern "C" int printk(const char *fmt, ...)
+int printk(const char *fmt, ...)
 {
 	va_list args;
 	int i;
@@ -30,12 +30,12 @@ extern "C" int printk(const char *fmt, ...)
 		"push %%ds\n"
 		"pop %%fs\n"
 		"pushl %0\n"
-		"pushl $buf\n"
+		"pushl %1\n"
 		"pushl $0\n"
 		"call tty_write\n"
 		"addl $8,%%esp\n"
 		"popl %0\n"
 		"pop %%fs\n"
-		::"r" (i):"ax","cx","dx");
+		::"r" (i),"r"(buf):"ax","cx","dx");
 	return i;
 }
