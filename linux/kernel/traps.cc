@@ -36,27 +36,27 @@ register unsigned short __res; \
 __asm__("mov %%fs,%%ax":"=a" (__res):); \
 __res;})
 
-extern "C" int do_exit(long code);
-extern "C" void page_exception(void);
-extern "C" void divide_error(void);
-extern "C" void debug(void);
-extern "C" void nmi(void);
-extern "C" void int3(void);
-extern "C" void overflow(void);
-extern "C" void bounds(void);
-extern "C" void invalid_op(void);
-extern "C" void device_not_available(void);
-extern "C" void double_fault(void);
-extern "C" void coprocessor_segment_overrun(void);
-extern "C" void invalid_TSS(void);
-extern "C" void segment_not_present(void);
-extern "C" void stack_segment(void);
-extern "C" void general_protection(void);
-extern "C" void page_fault(void);
-extern "C" void coprocessor_error(void);
-extern "C" void reserved(void);
-extern "C" void parallel_interrupt(void);
-extern "C" void irq13(void);
+int do_exit(long code);
+void page_exception(void);
+void divide_error(void);
+void debug(void);
+void nmi(void);
+void int3(void);
+void overflow(void);
+void bounds(void);
+void invalid_op(void);
+void device_not_available(void);
+void double_fault(void);
+void coprocessor_segment_overrun(void);
+void invalid_TSS(void);
+void segment_not_present(void);
+void stack_segment(void);
+void general_protection(void);
+void page_fault(void);
+void coprocessor_error(void);
+void reserved(void);
+void parallel_interrupt(void);
+void irq13(void);
 
 static void die(const char * str,long esp_ptr,long nr)
 {
@@ -82,22 +82,22 @@ static void die(const char * str,long esp_ptr,long nr)
 	do_exit(11);		/* play segment exception */
 }
 
-extern "C" void do_double_fault(long esp, long error_code)
+void do_double_fault(long esp, long error_code)
 {
 	die("double fault",esp,error_code);
 }
 
-extern "C" void do_general_protection(long esp, long error_code)
+void do_general_protection(long esp, long error_code)
 {
 	die("general protection",esp,error_code);
 }
 
-extern "C" void do_divide_error(long esp, long error_code)
+void do_divide_error(long esp, long error_code)
 {
 	die("divide error",esp,error_code);
 }
 
-extern "C" void do_int3(long * esp, long error_code,
+void do_int3(long * esp, long error_code,
 		long fs,long es,long ds,
 		long ebp,long esi,long edi,
 		long edx,long ecx,long ebx,long eax)
@@ -114,64 +114,64 @@ extern "C" void do_int3(long * esp, long error_code,
 	printk("EIP: %8x   CS: %4x  EFLAGS: %8x\n\r",esp[0],esp[1],esp[2]);
 }
 
-extern "C" void do_nmi(long esp, long error_code)
+void do_nmi(long esp, long error_code)
 {
 	die("nmi",esp,error_code);
 }
 
-extern "C" void do_debug(long esp, long error_code)
+void do_debug(long esp, long error_code)
 {
 	die("debug",esp,error_code);
 }
 
-extern "C" void do_overflow(long esp, long error_code)
+void do_overflow(long esp, long error_code)
 {
 	die("overflow",esp,error_code);
 }
 
-extern "C" void do_bounds(long esp, long error_code)
+void do_bounds(long esp, long error_code)
 {
 	die("bounds",esp,error_code);
 }
 
-extern "C" void do_invalid_op(long esp, long error_code)
+void do_invalid_op(long esp, long error_code)
 {
 	die("invalid operand",esp,error_code);
 }
 
-extern "C" void do_device_not_available(long esp, long error_code)
+void do_device_not_available(long esp, long error_code)
 {
 	die("device not available",esp,error_code);
 }
 
-extern "C" void do_coprocessor_segment_overrun(long esp, long error_code)
+void do_coprocessor_segment_overrun(long esp, long error_code)
 {
 	die("coprocessor segment overrun",esp,error_code);
 }
 
-extern "C" void do_invalid_TSS(long esp,long error_code)
+void do_invalid_TSS(long esp,long error_code)
 {
 	die("invalid TSS",esp,error_code);
 }
 
-extern "C" void do_segment_not_present(long esp,long error_code)
+void do_segment_not_present(long esp,long error_code)
 {
 	die("segment not present",esp,error_code);
 }
 
-extern "C" void do_stack_segment(long esp,long error_code)
+void do_stack_segment(long esp,long error_code)
 {
 	die("stack segment",esp,error_code);
 }
 
-extern "C" void do_coprocessor_error(long esp, long error_code)
+void do_coprocessor_error(long esp, long error_code)
 {
 	if (last_task_used_math != current)
 		return;
 	die("coprocessor error",esp,error_code);
 }
 
-extern "C" void do_reserved(long esp, long error_code)
+void do_reserved(long esp, long error_code)
 {
 	die("reserved (15,17-47) error",esp,error_code);
 }

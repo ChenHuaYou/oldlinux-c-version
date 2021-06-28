@@ -3,7 +3,7 @@
 #
 # Note! Dependencies are done automagically by 'make dep', which also
 # removes any old dependencies. DON'T put your own dependencies here
-# unless it's something special (ie not a .c file).
+# unless it's something special (ie not a .cc file).
 #
 
 AR	=ar
@@ -15,12 +15,12 @@ CFLAGS	=-Wall -O -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../include -fno-stack-protector -fno-builtin -g
 #CPP	=gcc -E -nostdinc -I../include
 
-.c.s:
+.cc.s:
 	$(CC) $(CFLAGS) \
 	-S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
-.c.o:
+.cc.o:
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<
 
@@ -33,41 +33,41 @@ lib.a: $(OBJS)
 
 clean:
 	rm -f core *.o *.a tmp_make
-	for i in *.c;do rm -f `basename $$i .c`.s;done
+	for i in *.cc;do rm -f `basename $$i .cc`.s;done
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make
-	(for i in *.c;do echo -n `echo $$i | sed 's,\.c,\.s,'`" "; \
+	(for i in *.cc;do echo -n `echo $$i | sed 's,\.cc,\.s,'`" "; \
 		$(CPP) -M $$i;done) >> tmp_make
 	cp tmp_make Makefile
 
 ### Dependencies:
-_exit.s _exit.o : _exit.c ../include/unistd.h ../include/sys/stat.h \
+_exit.s _exit.o : _exit.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h 
-close.s close.o : close.c ../include/unistd.h ../include/sys/stat.h \
+close.s close.o : close.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h 
-ctype.s ctype.o : ctype.c ../include/ctype.h 
-dup.s dup.o : dup.c ../include/unistd.h ../include/sys/stat.h \
+ctype.s ctype.o : ctype.cc ../include/ctype.h 
+dup.s dup.o : dup.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h 
-errno.s errno.o : errno.c 
-execve.s execve.o : execve.c ../include/unistd.h ../include/sys/stat.h \
+errno.s errno.o : errno.cc 
+execve.s execve.o : execve.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h 
-malloc.s malloc.o : malloc.c ../include/linux/kernel.h ../include/linux/mm.h \
+malloc.s malloc.o : malloc.cc ../include/linux/kernel.h ../include/linux/mm.h \
   ../include/asm/system.h 
-open.s open.o : open.c ../include/unistd.h ../include/sys/stat.h \
+open.s open.o : open.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h ../include/stdarg.h 
-setsid.s setsid.o : setsid.c ../include/unistd.h ../include/sys/stat.h \
+setsid.s setsid.o : setsid.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h 
-string.s string.o : string.c ../include/string.h 
-wait.s wait.o : wait.c ../include/unistd.h ../include/sys/stat.h \
+string.s string.o : string.cc ../include/string.h 
+wait.s wait.o : wait.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h ../include/sys/wait.h 
-write.s write.o : write.c ../include/unistd.h ../include/sys/stat.h \
+write.s write.o : write.cc ../include/unistd.h ../include/sys/stat.h \
   ../include/sys/types.h ../include/sys/times.h ../include/sys/utsname.h \
   ../include/utime.h 

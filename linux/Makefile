@@ -28,12 +28,12 @@ DRIVERS =kernel/blk_drv/blk_drv.a kernel/chr_drv/chr_drv.a
 MATH	=kernel/math/math.a
 LIBS	=lib/lib.a
 
-.c.s:
+.cc.s:
 	$(CC) $(CFLAGS) \
 	-nostdinc -Iinclude -S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
-.c.o:
+.cc.o:
 	$(CC) $(CFLAGS) \
 	-nostdinc -Iinclude -c -o $*.o $<
 
@@ -54,9 +54,9 @@ debug:
 	gdb --args tools/build boot/bootsect boot/setup tools/kernel $(ROOT_DEV)
 	
 
-tools/build: tools/build.c
+tools/build: tools/build.cc
 	gcc $(CFLAGS) \
-	-g -o tools/build tools/build.c
+	-g -o tools/build tools/build.cc
 
 boot/head.o: boot/head.s
 
@@ -118,14 +118,14 @@ backup: clean
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make
-	(for i in init/*.c;do echo -n "init/";$(CPP) -M $$i;done) >> tmp_make
+	(for i in init/*.cc;do echo -n "init/";$(CPP) -M $$i;done) >> tmp_make
 	cp tmp_make Makefile
 	(cd fs; make dep)
 	(cd kernel; make dep)
 	(cd mm; make dep)
 
 ### Dependencies:
-init/main.o: init/main.c include/unistd.h include/sys/stat.h \
+init/main.o: init/main.cc include/unistd.h include/sys/stat.h \
   include/sys/types.h include/sys/times.h include/sys/utsname.h \
   include/utime.h include/time.h include/linux/tty.h include/termios.h \
   include/linux/sched.h include/linux/head.h include/linux/fs.h \

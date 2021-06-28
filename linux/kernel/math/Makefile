@@ -3,7 +3,7 @@
 #
 # Note! Dependencies are done automagically by 'make dep', which also
 # removes any old dependencies. DON'T put your own dependencies here
-# unless it's something special (ie not a .c file).
+# unless it's something special (ie not a .cc file).
 #
 
 AR	=ar
@@ -15,12 +15,12 @@ CFLAGS	=-Wall -O -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../../include -fno-stack-protector -g
 #CPP	=gcc -E -nostdinc -I../../include
 
-.c.s:
+.cc.s:
 	$(CC) $(CFLAGS) \
 	-S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
-.c.o:
+.cc.o:
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<
 
@@ -32,11 +32,11 @@ math.a: $(OBJS)
 
 clean:
 	rm -f core *.o *.a tmp_make
-	for i in *.c;do rm -f `basename $$i .c`.s;done
+	for i in *.cc;do rm -f `basename $$i .cc`.s;done
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make
-	(for i in *.c;do echo -n `echo $$i | sed 's,\.c,\.s,'`" "; \
+	(for i in *.cc;do echo -n `echo $$i | sed 's,\.cc,\.s,'`" "; \
 		$(CPP) -M $$i;done) >> tmp_make
 	cp tmp_make Makefile
 

@@ -4,7 +4,7 @@
  *  (C) 1991  Linus Torvalds
  */
 
-#include "linux/fs.h"
+#include <linux/fs.h>
 #include <errno.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -15,7 +15,7 @@
 #include <asm/segment.h>
 
 int sys_pause(void);
-int sys_close(int fd);
+int sys_close(unsigned int fd);
 
 void release(struct task_struct * p)
 {
@@ -100,7 +100,6 @@ static void tell_father(int pid)
 	release(current);
 }
 
-extern "C"
 int do_exit(long code)
 {
 	int i;

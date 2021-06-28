@@ -7,12 +7,12 @@ AS	=as --32
 LD	=ld -m elf_i386
 #CPP	=gcc -E -nostdinc -I../include
 
-.c.o:
+.cc.o:
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<
 .s.o:
 	$(AS) -c -o $*.o $<
-.c.s:
+.cc.s:
 	$(CC) $(CFLAGS) \
 	-S -o $*.s $<
 
@@ -25,15 +25,15 @@ mm.o: $(OBJS)
 
 clean:
 	rm -f core *.o *.a tmp_make
-	for i in *.c;do rm -f `basename $$i .c`.s;done
+	for i in *.cc;do rm -f `basename $$i .cc`.s;done
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make
-	(for i in *.c;do $(CPP) -M $$i;done) >> tmp_make
+	(for i in *.cc;do $(CPP) -M $$i;done) >> tmp_make
 	cp tmp_make Makefile
 
 ### Dependencies:
-memory.o: memory.c ../include/signal.h ../include/sys/types.h \
+memory.o: memory.cc ../include/signal.h ../include/sys/types.h \
   ../include/asm/system.h ../include/linux/sched.h \
   ../include/linux/head.h ../include/linux/fs.h ../include/linux/mm.h \
   ../include/linux/kernel.h
