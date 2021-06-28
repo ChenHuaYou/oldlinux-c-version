@@ -83,29 +83,33 @@ void nmi(void){
 
 void int3(void){
     __asm__(
-            "pushl $do_int3\n\t"
+            "pushl %0\n\t"
             "jmp no_error_code\n\t"
+            ::"r"(do_int3)
            );
 }
 
 void overflow(void){
     __asm__(
-            "pushl $do_overflow\n\t"
+            "pushl %0\n\t"
             "jmp no_error_code\n\t"
+            ::"r"(do_overflow)
            );
 }
 
 void bounds(void){
     __asm__(
-            "pushl $do_bounds\n\t"
+            "pushl %0\n\t"
             "jmp no_error_code\n\t"
+            ::"r"(do_bounds)
            );
 }
 
 void invalid_op(void){
     __asm__(
-            "pushl $do_invalid_op\n\t"
+            "pushl %0\n\t"
             "jmp no_error_code\n\t"
+            ::"r"(do_invalid_op)
            );
 }
 
@@ -141,8 +145,9 @@ void irq13(void){
 
 void double_fault(void){
     __asm__(
-            "pushl $do_double_fault\n\t"
+            "pushl %0\n\t"
             "jmp error_code\n\t"
+            ::"r"(do_double_fault)
            );
 }
 
@@ -183,29 +188,33 @@ __asm__(
 
 void invalid_TSS(void){
     __asm__(
-            "pushl $do_invalid_TSS\n\t"
+            "pushl %0\n\t"
             "jmp error_code\n\t"
+            ::"r"(do_invalid_TSS)
            );
 }
 
 void segment_not_present(void){
     __asm__(
-            "pushl $do_segment_not_present\n\t"
+            "pushl %0\n\t"
             "jmp error_code\n\t"
+            ::"r"(do_segment_not_present)
            );
 }
 
 void stack_segment(void){
     __asm__(
-            "pushl $do_stack_segment\n\t"
+            "pushl %0\n\t"
             "jmp error_code\n\t"
+            ::"r"(do_stack_segment)
            );
 }
 
 void general_protection(void){
     __asm__(
-            "pushl $do_general_protection\n\t"
+            "pushl %0\n\t"
             "jmp error_code\n\t"
+            ::"r"(do_general_protection)
            );
 }
 

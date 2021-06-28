@@ -48,8 +48,8 @@ void show_stat(void)
 
 extern void mem_use(void);
 
-extern "C" int timer_interrupt(void);
-extern "C" int system_call(void);
+void timer_interrupt(void);
+void system_call(void);
 
 union task_union {
 	struct task_struct task;
