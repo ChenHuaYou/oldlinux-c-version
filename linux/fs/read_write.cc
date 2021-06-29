@@ -15,8 +15,8 @@
 extern int rw_char(int rw,int dev, char * buf, int count, off_t * pos);
 extern int read_pipe(struct m_inode * inode, char * buf, int count);
 extern int write_pipe(struct m_inode * inode, char * buf, int count);
-extern int block_read(int dev, off_t * pos, char * buf, int count);
-extern int block_write(int dev, off_t * pos, char * buf, int count);
+extern int block_read(int dev, unsigned long * pos, char * buf, int count);
+extern int block_write(int dev, long * pos, char * buf, int count);
 extern int file_read(struct m_inode * inode, struct file * filp,
 		char * buf, int count);
 extern int file_write(struct m_inode * inode, struct file * filp,
@@ -68,7 +68,7 @@ int sys_read(unsigned int fd,char * buf,int count)
 	if (S_ISCHR(inode->i_mode))
 		return rw_char(READ,inode->i_zone[0],buf,count,&file->f_pos);
 	if (S_ISBLK(inode->i_mode))
-		return block_read(inode->i_zone[0],&file->f_pos,buf,count);
+		return block_read((int)inode->i_zone[0],(unsigned long *)&file->f_pos,buf,count);
 	if (S_ISDIR(inode->i_mode) || S_ISREG(inode->i_mode)) {
 		if (count+file->f_pos > (int)inode->i_size)
 			count = inode->i_size - file->f_pos;

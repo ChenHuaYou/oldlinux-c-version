@@ -116,13 +116,14 @@ static void scrup(void)
 				__asm__("cld\n\t"
 					"rep\n\t"
 					"movsl\n\t"
-					"movl video_num_columns,%1\n\t"
+					"movl %4,%1\n\t"
 					"rep\n\t"
 					"stosw"
 					::"a" (video_erase_char),
 					"c" ((video_num_lines-1)*video_num_columns>>1),
 					"D" (video_mem_start),
-					"S" (origin)
+					"S" (origin),
+                    "r"(video_num_columns)
 					);
 				scr_end -= origin-video_mem_start;
 				pos -= origin-video_mem_start;
@@ -141,13 +142,14 @@ static void scrup(void)
 			__asm__("cld\n\t"
 				"rep\n\t"
 				"movsl\n\t"
-				"movl video_num_columns,%%ecx\n\t"
+				"movl %4,%%ecx\n\t"
 				"rep\n\t"
 				"stosw"
 				::"a" (video_erase_char),
 				"c" ((bottom-top-1)*video_num_columns>>1),
 				"D" (origin+video_size_row*top),
-				"S" (origin+video_size_row*(top+1))
+				"S" (origin+video_size_row*(top+1)),
+                "r"(video_num_columns)
 				);
 		}
 	}

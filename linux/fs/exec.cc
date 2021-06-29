@@ -29,7 +29,7 @@
 #include <asm/segment.h>
 
 extern int sys_exit(int exit_code);
-extern int sys_close(int fd);
+extern int sys_close(unsigned int fd);
 
 /*
  * MAX_ARG_PAGES defines the number of pages allocated for arguments

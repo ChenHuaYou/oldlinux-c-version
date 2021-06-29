@@ -13,7 +13,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-extern int sys_close(int fd);
+extern int sys_close(unsigned int fd);
 
 static int dupfd(unsigned int fd, unsigned int arg)
 {

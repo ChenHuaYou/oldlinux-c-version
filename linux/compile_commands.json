@@ -6,73 +6,6 @@
             "-march=i386",
             "-m32",
             "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "close.o",
-            "close.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "close.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "ioctl.o",
-            "ioctl.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "ioctl.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "_exit.o",
-            "_exit.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "_exit.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
             "-finline-functions",
@@ -95,96 +28,6 @@
             "-march=i386",
             "-m32",
             "-Wall",
-            "-O0",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "vsprintf.o",
-            "vsprintf.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "vsprintf.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O0",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "asm.o",
-            "asm.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "asm.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-m32",
-            "-march=i386",
-            "-Wall",
-            "-O0",
-            "-fomit-frame-pointer",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-nostdinc",
-            "-Iinclude",
-            "-o",
-            "init/main.o",
-            "init/main.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux",
-        "file": "init/main.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O0",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "signal.o",
-            "signal.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "signal.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
             "-nostdinc",
@@ -193,11 +36,32 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "block_dev.o",
-            "block_dev.cc"
+            "truncate.o",
+            "truncate.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "block_dev.cc"
+        "file": "truncate.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "read_write.o",
+            "read_write.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "read_write.cc"
     },
     {
         "arguments": [
@@ -216,11 +80,11 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "open.o",
-            "open.cc"
+            "dup.o",
+            "dup.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "open.cc"
+        "file": "dup.cc"
     },
     {
         "arguments": [
@@ -229,19 +93,21 @@
             "-march=i386",
             "-m32",
             "-Wall",
+            "-O0",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
+            "-finline-functions",
             "-nostdinc",
             "-I../include",
             "-fno-stack-protector",
             "-fno-builtin",
             "-g",
             "-o",
-            "open.o",
-            "open.cc"
+            "system_call.o",
+            "system_call.cc"
         ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "open.cc"
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
+        "file": "system_call.cc"
     },
     {
         "arguments": [
@@ -275,50 +141,6 @@
             "-Wall",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "super.o",
-            "super.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "super.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "ctype.o",
-            "ctype.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "ctype.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
             "-finline-functions",
             "-nostdinc",
             "-I../../include",
@@ -340,61 +162,18 @@
             "-Wall",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "exec.o",
-            "exec.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "exec.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
             "-finline-functions",
             "-nostdinc",
-            "-I../include",
+            "-I../../include",
             "-fno-stack-protector",
             "-fno-builtin",
             "-g",
             "-o",
-            "write.o",
-            "write.cc"
+            "ramdisk.o",
+            "ramdisk.cc"
         ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "write.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "read_write.o",
-            "read_write.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "read_write.cc"
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/blk_drv",
+        "file": "ramdisk.cc"
     },
     {
         "arguments": [
@@ -413,101 +192,11 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "panic.o",
-            "panic.cc"
+            "vsprintf.o",
+            "vsprintf.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "panic.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "errno.o",
-            "errno.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "errno.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "dup.o",
-            "dup.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "dup.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "execve.o",
-            "execve.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "execve.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-g",
-            "-o",
-            "memory.o",
-            "memory.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/mm",
-        "file": "memory.cc"
+        "file": "vsprintf.cc"
     },
     {
         "arguments": [
@@ -524,140 +213,11 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "file_dev.o",
-            "file_dev.cc"
+            "bitmap.o",
+            "bitmap.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "file_dev.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "string.o",
-            "string.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
-        "file": "string.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../../include",
-            "-fno-stack-protector",
-            "-g",
-            "-o",
-            "console.o",
-            "console.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/chr_drv",
-        "file": "console.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "char_dev.o",
-            "char_dev.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "char_dev.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "buffer.o",
-            "buffer.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "buffer.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "hd.o",
-            "hd.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/blk_drv",
-        "file": "hd.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "pipe.o",
-            "pipe.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "pipe.cc"
+        "file": "bitmap.cc"
     },
     {
         "arguments": [
@@ -699,11 +259,96 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "traps.o",
-            "traps.cc"
+            "signal.o",
+            "signal.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "traps.cc"
+        "file": "signal.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "floppy.o",
+            "floppy.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/blk_drv",
+        "file": "floppy.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-g",
+            "-o",
+            "page.o",
+            "page.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/mm",
+        "file": "page.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "super.o",
+            "super.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "super.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "fcntl.o",
+            "fcntl.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "fcntl.cc"
     },
     {
         "arguments": [
@@ -735,6 +380,50 @@
             "-march=i386",
             "-m32",
             "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "pipe.o",
+            "pipe.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "pipe.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "open.o",
+            "open.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "open.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
             "-O0",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
@@ -745,11 +434,141 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "sys.o",
-            "sys.cc"
+            "printk.o",
+            "printk.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "sys.cc"
+        "file": "printk.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "namei.o",
+            "namei.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "namei.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "stat.o",
+            "stat.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "stat.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "ioctl.o",
+            "ioctl.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "ioctl.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O0",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "fork.o",
+            "fork.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
+        "file": "fork.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "execve.o",
+            "execve.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "execve.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../../include",
+            "-fno-stack-protector",
+            "-g",
+            "-o",
+            "serial.o",
+            "serial.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/chr_drv",
+        "file": "serial.cc"
     },
     {
         "arguments": [
@@ -802,50 +621,6 @@
             "-march=i386",
             "-m32",
             "-Wall",
-            "-O0",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "printk.o",
-            "printk.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "printk.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "stat.o",
-            "stat.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "stat.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
             "-finline-functions",
@@ -854,98 +629,11 @@
             "-fno-stack-protector",
             "-g",
             "-o",
-            "serial.o",
-            "serial.cc"
+            "console.o",
+            "console.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/chr_drv",
-        "file": "serial.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../../include",
-            "-fno-stack-protector",
-            "-g",
-            "-o",
-            "math_emulate.o",
-            "math_emulate.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/math",
-        "file": "math_emulate.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "fcntl.o",
-            "fcntl.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "fcntl.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-O0",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "sched.o",
-            "sched.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "sched.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "namei.o",
-            "namei.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "namei.cc"
+        "file": "console.cc"
     },
     {
         "arguments": [
@@ -969,6 +657,275 @@
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
         "file": "setsid.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O0",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "panic.o",
+            "panic.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
+        "file": "panic.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "_exit.o",
+            "_exit.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "_exit.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O0",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "traps.o",
+            "traps.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
+        "file": "traps.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "ctype.o",
+            "ctype.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "ctype.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "string.o",
+            "string.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "string.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O0",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "asm.o",
+            "asm.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
+        "file": "asm.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "block_dev.o",
+            "block_dev.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "block_dev.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "write.o",
+            "write.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "write.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "hd.o",
+            "hd.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/blk_drv",
+        "file": "hd.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "errno.o",
+            "errno.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "errno.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "buffer.o",
+            "buffer.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "buffer.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-g",
+            "-o",
+            "memory.o",
+            "memory.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/mm",
+        "file": "memory.cc"
     },
     {
         "arguments": [
@@ -1008,75 +965,11 @@
             "-fno-builtin",
             "-g",
             "-o",
-            "fork.o",
-            "fork.cc"
+            "sched.o",
+            "sched.cc"
         ],
         "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
-        "file": "fork.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "truncate.o",
-            "truncate.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "truncate.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-finline-functions",
-            "-nostdinc",
-            "-I../../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "floppy.o",
-            "floppy.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/blk_drv",
-        "file": "floppy.cc"
-    },
-    {
-        "arguments": [
-            "c++",
-            "-c",
-            "-march=i386",
-            "-m32",
-            "-Wall",
-            "-fstrength-reduce",
-            "-fomit-frame-pointer",
-            "-nostdinc",
-            "-I../include",
-            "-fno-stack-protector",
-            "-fno-builtin",
-            "-g",
-            "-o",
-            "bitmap.o",
-            "bitmap.cc"
-        ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
-        "file": "bitmap.cc"
+        "file": "sched.cc"
     },
     {
         "arguments": [
@@ -1108,17 +1001,168 @@
             "-Wall",
             "-fstrength-reduce",
             "-fomit-frame-pointer",
-            "-finline-functions",
             "-nostdinc",
-            "-I../../include",
+            "-I../include",
             "-fno-stack-protector",
             "-fno-builtin",
             "-g",
             "-o",
-            "ramdisk.o",
-            "ramdisk.cc"
+            "char_dev.o",
+            "char_dev.cc"
         ],
-        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/blk_drv",
-        "file": "ramdisk.cc"
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "char_dev.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "close.o",
+            "close.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/lib",
+        "file": "close.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "file_dev.o",
+            "file_dev.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "file_dev.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O0",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "sys.o",
+            "sys.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel",
+        "file": "sys.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "exec.o",
+            "exec.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "exec.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-nostdinc",
+            "-I../include",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-o",
+            "open.o",
+            "open.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/fs",
+        "file": "open.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-m32",
+            "-march=i386",
+            "-Wall",
+            "-O0",
+            "-fomit-frame-pointer",
+            "-fno-stack-protector",
+            "-fno-builtin",
+            "-g",
+            "-nostdinc",
+            "-Iinclude",
+            "-o",
+            "init/main.o",
+            "init/main.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux",
+        "file": "init/main.cc"
+    },
+    {
+        "arguments": [
+            "c++",
+            "-c",
+            "-march=i386",
+            "-m32",
+            "-Wall",
+            "-O",
+            "-fstrength-reduce",
+            "-fomit-frame-pointer",
+            "-finline-functions",
+            "-nostdinc",
+            "-I../../include",
+            "-fno-stack-protector",
+            "-g",
+            "-o",
+            "math_emulate.o",
+            "math_emulate.cc"
+        ],
+        "directory": "/home/mc/erp/data/oldlinux-cpp-version/linux/kernel/math",
+        "file": "math_emulate.cc"
     }
 ]

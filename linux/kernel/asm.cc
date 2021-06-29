@@ -20,6 +20,7 @@ void do_int3(long * esp, long error_code,
 		long ebp,long esi,long edi,
 		long edx,long ecx,long ebx,long eax);
 
+void coprocessor_error();
 
 
 asm(
@@ -115,30 +116,33 @@ void invalid_op(void){
 
 void coprocessor_segment_overrun(void){
     __asm__(
-            "pushl $do_coprocessor_segment_overrun\n\t"
+            "pushl %0\n\t"
             "jmp no_error_code\n\t"
+            ::"r"(do_coprocessor_segment_overrun)
            );
 }
 
 void reserved(void){
     __asm__(
-            "pushl $do_reserved\n\t"
+            "pushl %0\n\t"
             "jmp no_error_code\n\t"
+            ::"r"(do_reserved)
            );
 }
 
 void irq13(void){
     __asm__(
-	"pushl %eax\n\t"
-	"xorb %al,%al\n\t"
-	"outb %al,$0xF0\n\t"
-	"movb $0x20,%al\n\t"
-	"outb %al,$0x20\n\t"
+	"pushl %%eax\n\t"
+	"xorb %%al,%%al\n\t"
+	"outb %%al,$0xF0\n\t"
+	"movb $0x20,%%al\n\t"
+	"outb %%al,$0x20\n\t"
 	"jmp 1f\n\t"
     "1:	jmp 1f\n\t"
-    "1:	outb %al,$0xA0\n\t"
-	"popl %eax\n\t"
-	"jmp coprocessor_error\n\t"
+    "1:	outb %%al,$0xA0\n\t"
+	"popl %%eax\n\t"
+	"jmp %0\n\t"
+    ::"r"(coprocessor_error)
     );
 }
 

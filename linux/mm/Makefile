@@ -32,8 +32,8 @@ dep:
 	(for i in *.cc;do $(CPP) -M $$i;done) >> tmp_make
 	cp tmp_make Makefile
 
-### Dependencies:
-memory.o: memory.cc ../include/signal.h ../include/sys/types.h \
-  ../include/asm/system.h ../include/linux/sched.h \
-  ../include/linux/head.h ../include/linux/fs.h ../include/linux/mm.h \
-  ../include/linux/kernel.h
+#### Dependencies:
+#memory.o: memory.cc ../include/signal.h ../include/sys/types.h \
+#  ../include/asm/system.h ../include/linux/sched.h \
+#  ../include/linux/head.h ../include/linux/fs.h ../include/linux/mm.h \
+#  ../include/linux/kernel.h
