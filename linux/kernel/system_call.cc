@@ -204,6 +204,7 @@ void system_call(){
             "pop %%ds\n\t"
             "iret\n\t"
             ::"r"(current)
+            :"eax"
             );
 }
 
