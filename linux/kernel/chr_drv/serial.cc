@@ -20,8 +20,8 @@
 
 #define WAKEUP_CHARS (TTY_BUF_SIZE/4)
 
-extern void rs1_interrupt(void);
-extern void rs2_interrupt(void);
+extern "C" void rs1_interrupt(void);
+extern "C" void rs2_interrupt(void);
 
 static void init(int port)
 {

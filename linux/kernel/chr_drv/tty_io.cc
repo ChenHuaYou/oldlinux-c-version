@@ -341,7 +341,7 @@ int tty_write(unsigned channel, char * buf, int nr)
  * anyway, which is good, as the task sleeping might be
  * totally innocent.
  */
-void do_tty_interrupt(int tty)
+extern "C" void do_tty_interrupt(int tty)
 {
 	copy_to_cooked(tty_table+tty);
 }

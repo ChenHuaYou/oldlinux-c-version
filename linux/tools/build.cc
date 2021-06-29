@@ -46,7 +46,7 @@
 
 #define STRINGIFY(x) #x
 
-void die(char * str)
+void die(const char * str)
 {
 	fprintf(stderr,"%s\n",str);
 	exit(1);
@@ -60,7 +60,7 @@ void usage(void)
 int main(int argc, char ** argv)
 {
     //printf("int: %d, long: %d\n",sizeof(int), sizeof(long));
-	int i,c,id;
+	unsigned int i,c,id;
 	char buf[1024];
 	char major_root, minor_root;
 	struct stat sb;
@@ -91,7 +91,7 @@ int main(int argc, char ** argv)
 			major_root);
 		die("Bad root device --- major #");
 	}
-	for (i=0;i<sizeof buf; i++) buf[i]=0;
+	for (i=0;i<sizeof(buf); i++) buf[i]=0;
 	if ((id=open(argv[1],O_RDONLY,0))<0)
 		die("Unable to open 'boot'");
 	if (read(id,buf,MINIX_HEADER) != MINIX_HEADER)
@@ -108,7 +108,7 @@ int main(int argc, char ** argv)
 		die("Non-Minix header of 'boot'");
 	if (((int *) buf)[7] != 0)
 		die("Illegal symbol table in 'boot'");
-	i=read(id,buf,sizeof buf);
+	i=read(id,buf,sizeof(buf));
 	fprintf(stderr,"Boot sector %d bytes.\n",i);
 	if (i != 512)
 		die("Boot block must be exactly 512 bytes");

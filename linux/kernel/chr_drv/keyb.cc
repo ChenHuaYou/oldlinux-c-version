@@ -20,7 +20,7 @@
  */
 
 void show_stat(void);
-void do_tty_interrupt(int tty);
+extern "C" void do_tty_interrupt(int tty);
 void keyboard_interrupt(){
     __asm__(
             "pushl %%eax\n\t"
@@ -75,7 +75,7 @@ void keyboard_interrupt(){
  * this routine handles function keys
  */
 
-void func(){
+extern "C" void func(){
     __asm__(
             "pushl %%eax\n\t"
             "pushl %%ecx\n\t"

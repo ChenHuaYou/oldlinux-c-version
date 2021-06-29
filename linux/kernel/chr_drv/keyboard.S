@@ -13,7 +13,7 @@
 #include <linux/config.h>
 
 .text
-.globl keyboard_interrupt,key_table,e0_e1,e0
+.globl keyboard_interrupt,key_table,e0_e1,e0,func_table,put_queue
 
 /*
  * these are for the keyboard read functions

@@ -19,7 +19,7 @@ extern int sys_time(long * tloc);
 extern int sys_mknod(const char * filename, int mode, int dev);
 extern int sys_chmod(const char * filename,int mode);
 extern int sys_chown(const char * filename,int uid,int gid);
-extern int sys_break(char * filename, struct stat * statbuf);
+extern int sys_break();
 extern int sys_stat(char * filename, struct stat * statbuf);
 extern int sys_lseek(unsigned int fd,off_t offset, int origin);
 extern int sys_getpid(void);
