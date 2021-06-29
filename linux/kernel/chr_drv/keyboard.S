@@ -13,7 +13,7 @@
 #include <linux/config.h>
 
 .text
-.globl keyboard_interrupt
+.globl keyboard_interrupt,key_table,e0_e1,e0
 
 /*
  * these are for the keyboard read functions
@@ -34,51 +34,6 @@ e0:	.byte 0
  *  keyboard scan-code and converts it into the appropriate
  *  ascii character(s).
  */
-keyboard_interrupt:
-	pushl %eax
-	pushl %ebx
-	pushl %ecx
-	pushl %edx
-	push %ds
-	push %es
-	movl $0x10,%eax
-	mov %ax,%ds
-	mov %ax,%es
-	xor %al,%al		/* %eax is scan code */
-	inb $0x60,%al
-	cmpb $0xe0,%al
-	je set_e0
-	cmpb $0xe1,%al
-	je set_e1
-	call *key_table(,%eax,4)
-	movb $0,e0
-e0_e1:	inb $0x61,%al
-	jmp 1f
-1:	jmp 1f
-1:	orb $0x80,%al
-	jmp 1f
-1:	jmp 1f
-1:	outb %al,$0x61
-	jmp 1f
-1:	jmp 1f
-1:	andb $0x7F,%al
-	outb %al,$0x61
-	movb $0x20,%al
-	outb %al,$0x20
-	pushl $0
-	call do_tty_interrupt
-	addl $4,%esp
-	pop %es
-	pop %ds
-	popl %edx
-	popl %ecx
-	popl %ebx
-	popl %eax
-	iret
-set_e0:	movb $1,e0
-	jmp e0_e1
-set_e1:	movb $2,e0
-	jmp e0_e1
 
 /*
  * This routine fills the buffer with max 8 bytes, taken from
@@ -204,34 +159,6 @@ num_table:
 cur_table:
 	.ascii "HA5 DGC YB623"
 
-/*
- * this routine handles function keys
- */
-func:
-	pushl %eax
-	pushl %ecx
-	pushl %edx
-	call show_stat
-	popl %edx
-	popl %ecx
-	popl %eax
-	subb $0x3B,%al
-	jb end_func
-	cmpb $9,%al
-	jbe ok_func
-	subb $18,%al
-	cmpb $10,%al
-	jb end_func
-	cmpb $11,%al
-	ja end_func
-ok_func:
-	cmpl $4,%ecx		/* check that there is enough room */
-	jl end_func
-	movl func_table(,%eax,4),%eax
-	xorl %ebx,%ebx
-	jmp put_queue
-end_func:
-	ret
 
 /*
  * function keys send F1:'esc [ [ A' F2:'esc [ [ B' etc.

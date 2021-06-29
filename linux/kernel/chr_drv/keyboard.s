@@ -47,7 +47,7 @@
 # 14 "keyboard.S" 2
 
 .text
-.globl keyboard_interrupt
+.globl keyboard_interrupt,key_table,e0_e1,e0
 
 
 
@@ -68,51 +68,6 @@ e0:	.byte 0
 
 
 
-keyboard_interrupt:
-	pushl %eax
-	pushl %ebx
-	pushl %ecx
-	pushl %edx
-	push %ds
-	push %es
-	movl $0x10,%eax
-	mov %ax,%ds
-	mov %ax,%es
-	xor %al,%al		
-	inb $0x60,%al
-	cmpb $0xe0,%al
-	je set_e0
-	cmpb $0xe1,%al
-	je set_e1
-	call *key_table(,%eax,4)
-	movb $0,e0
-e0_e1:	inb $0x61,%al
-	jmp 1f
-1:	jmp 1f
-1:	orb $0x80,%al
-	jmp 1f
-1:	jmp 1f
-1:	outb %al,$0x61
-	jmp 1f
-1:	jmp 1f
-1:	andb $0x7F,%al
-	outb %al,$0x61
-	movb $0x20,%al
-	outb %al,$0x20
-	pushl $0
-	call do_tty_interrupt
-	addl $4,%esp
-	pop %es
-	pop %ds
-	popl %edx
-	popl %ecx
-	popl %ebx
-	popl %eax
-	iret
-set_e0:	movb $1,e0
-	jmp e0_e1
-set_e1:	movb $2,e0
-	jmp e0_e1
 
 
 
@@ -241,41 +196,13 @@ cur_table:
 
 
 
-func:
-	pushl %eax
-	pushl %ecx
-	pushl %edx
-	call show_stat
-	popl %edx
-	popl %ecx
-	popl %eax
-	subb $0x3B,%al
-	jb end_func
-	cmpb $9,%al
-	jbe ok_func
-	subb $18,%al
-	cmpb $10,%al
-	jb end_func
-	cmpb $11,%al
-	ja end_func
-ok_func:
-	cmpl $4,%ecx		
-	jl end_func
-	movl func_table(,%eax,4),%eax
-	xorl %ebx,%ebx
-	jmp put_queue
-end_func:
-	ret
-
-
-
 
 func_table:
 	.long 0x415b5b1b,0x425b5b1b,0x435b5b1b,0x445b5b1b
 	.long 0x455b5b1b,0x465b5b1b,0x475b5b1b,0x485b5b1b
 	.long 0x495b5b1b,0x4a5b5b1b,0x4b5b5b1b,0x4c5b5b1b
 
-# 294 "keyboard.S"
+# 221 "keyboard.S"
 
 key_map:
 	.byte 0,27
@@ -326,7 +253,7 @@ alt_map:
 	.byte '|
 	.fill 10,1,0
 
-# 449 "keyboard.S"
+# 376 "keyboard.S"
 
 
 

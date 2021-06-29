@@ -15,16 +15,16 @@ CFLAGS	=-Wall -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../../include -fno-stack-protector -g
 CPP	=g++ -E -nostdinc -I../../include
 
-.cc.s:
-	$(CC) $(CFLAGS) \
-	-S -o $*.s $<
+#.cc.s:
+#	$(CC) $(CFLAGS) \
+#	-S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
 .cc.o:
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<
 
-OBJS  = tty_io.o console.o keyboard.o serial.o rs_io.o \
+OBJS  = tty_io.o console.o keyb.o keyboard.o serial.o rs_io.o \
 	tty_ioctl.o
 
 chr_drv.a: $(OBJS)
@@ -36,7 +36,7 @@ keyboard.s: keyboard.S ../../include/linux/config.h
 
 clean:
 	rm -f core *.o *.a tmp_make keyboard.s
-	for i in *.cc;do rm -f `basename $$i .cc`.s;done
+	#for i in *.cc;do rm -f `basename $$i .cc`.s;done
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make

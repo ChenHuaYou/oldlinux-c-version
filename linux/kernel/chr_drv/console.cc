@@ -53,7 +53,7 @@
 
 #define NPAR 16
 
-extern void keyboard_interrupt(void);
+extern void keyboard_interrupt();
 
 static unsigned char	video_type;		/* Type of display being used	*/
 static unsigned long	video_num_columns;	/* Number of text columns	*/
@@ -158,13 +158,14 @@ static void scrup(void)
 		__asm__("cld\n\t"
 			"rep\n\t"
 			"movsl\n\t"
-			"movl video_num_columns,%%ecx\n\t"
+			"movl %4,%%ecx\n\t"
 			"rep\n\t"
 			"stosw"
 			::"a" (video_erase_char),
 			"c" ((bottom-top-1)*video_num_columns>>1),
 			"D" (origin+video_size_row*top),
-			"S" (origin+video_size_row*(top+1))
+			"S" (origin+video_size_row*(top+1)),
+            "r"(video_num_columns)
 			);
 	}
 }
@@ -177,14 +178,15 @@ static void scrdown(void)
 			"rep\n\t"
 			"movsl\n\t"
 			"addl $2,%%edi\n\t"	/* %edi has been decremented by 4 */
-			"movl video_num_columns,%%ecx\n\t"
+			"movl %4,%%ecx\n\t"
 			"rep\n\t"
 			"stosw\n\t"
             "cld"
 			::"a" (video_erase_char),
 			"c" ((bottom-top-1)*video_num_columns>>1),
 			"D" (origin+video_size_row*bottom-4),
-			"S" (origin+video_size_row*(bottom-1)-4)
+			"S" (origin+video_size_row*(bottom-1)-4),
+            "r"(video_num_columns)
 			);
 	}
 	else		/* Not EGA/VGA */
@@ -193,14 +195,15 @@ static void scrdown(void)
 			"rep\n\t"
 			"movsl\n\t"
 			"addl $2,%%edi\n\t"	/* %edi has been decremented by 4 */
-			"movl video_num_columns,%%ecx\n\t"
+			"movl %4,%%ecx\n\t"
 			"rep\n\t"
 			"stosw\n\t"
             "cld"
 			::"a" (video_erase_char),
 			"c" ((bottom-top-1)*video_num_columns>>1),
 			"D" (origin+video_size_row*bottom-4),
-			"S" (origin+video_size_row*(bottom-1)-4)
+			"S" (origin+video_size_row*(bottom-1)-4),
+            "r"(video_num_columns)
 			);
 	}
 }
@@ -462,9 +465,11 @@ void con_write(struct tty_struct * tty)
 						pos -= video_size_row;
 						lf();
 					}
-					__asm__("movb attr,%%ah\n\t"
+					__asm__("movb %2,%%ah\n\t"
 						"movw %%ax,%1\n\t"
-						::"a" (c),"m" (*(short *)pos)
+						::"a" (c),
+                        "m" (*(short *)pos),
+                        "r"(attr)
 						);
 					pos += 2;
 					x++;

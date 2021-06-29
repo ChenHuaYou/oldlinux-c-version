@@ -6,9 +6,9 @@ CFLAGS	=-Wall -fstrength-reduce -fomit-frame-pointer \
 	 -nostdinc -I../include -fno-stack-protector -fno-builtin -g
 #CPP	=gcc -E -nostdinc -I../include
 
-.cc.s:
-	$(CC) $(CFLAGS) \
-	-S -o $*.s $<
+#.cc.s:
+#	$(CC) $(CFLAGS) \
+#	-S -o $*.s $<
 .cc.o:
 	$(CC) $(CFLAGS) \
 	-c -o $*.o $<
@@ -24,7 +24,7 @@ fs.o: $(OBJS)
 
 clean:
 	rm -f core *.o *.a tmp_make
-	for i in *.cc;do rm -f `basename $$i .cc`.s;done
+	#for i in *.cc;do rm -f `basename $$i .cc`.s;done
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make

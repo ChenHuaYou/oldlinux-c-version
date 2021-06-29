@@ -15,9 +15,9 @@ CFLAGS	=-Wall -O0 -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../include -fno-stack-protector -fno-builtin -g
 #CPP	=gcc -E -nostdinc -I../include
 
-.cc.s:
-	$(CC) $(CFLAGS) \
-	-S -o $*.s $<
+#.cc.s:
+#	$(CC) $(CFLAGS) \
+#	-S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
 .cc.o:
@@ -34,7 +34,7 @@ kernel.o: $(OBJS)
 
 clean:
 	rm -f core *.o *.a tmp_make keyboard.s
-	for i in *.cc;do rm -f `basename $$i .cc`.s;done
+	#for i in *.cc;do rm -f `basename $$i .cc`.s;done
 	(cd chr_drv; make clean)
 	(cd blk_drv; make clean)
 	(cd math; make clean)

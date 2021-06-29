@@ -12,9 +12,9 @@ LD	=ld -m elf_i386
 	-c -o $*.o $<
 .s.o:
 	$(AS) -c -o $*.o $<
-.cc.s:
-	$(CC) $(CFLAGS) \
-	-S -o $*.s $<
+#.cc.s:
+#	$(CC) $(CFLAGS) \
+#	-S -o $*.s $<
 
 OBJS	= memory.o page.o
 
@@ -25,7 +25,7 @@ mm.o: $(OBJS)
 
 clean:
 	rm -f core *.o *.a tmp_make
-	for i in *.cc;do rm -f `basename $$i .cc`.s;done
+	#for i in *.cc;do rm -f `basename $$i .cc`.s;done
 
 dep:
 	sed '/\#\#\# Dependencies/q' < Makefile > tmp_make
