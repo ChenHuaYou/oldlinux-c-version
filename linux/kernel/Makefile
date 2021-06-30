@@ -11,13 +11,13 @@ AS	=as --32
 LD	=ld -m elf_i386
 LDFLAGS	=-s -x -nostdlib 
 CC	=g++ -march=i386 -m32
-CFLAGS	=-Wall -O0 -fstrength-reduce -fomit-frame-pointer \
+CFLAGS	=-Wall -O1 -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I../include -fno-stack-protector -fno-builtin -g
 #CPP	=gcc -E -nostdinc -I../include
 
-#.cc.s:
-#	$(CC) $(CFLAGS) \
-#	-S -o $*.s $<
+.cc.s:
+	$(CC) $(CFLAGS) \
+	-S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
 .cc.o:

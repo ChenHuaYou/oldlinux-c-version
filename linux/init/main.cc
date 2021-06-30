@@ -21,7 +21,7 @@
  * some others too.
  */
 //static inline __attribute__((always_inline)) _syscall0(int,fork)
-_syscall0(int,fork)
+static inline __attribute__((always_inline)) _syscall0(int,fork)
 static inline __attribute__((always_inline)) _syscall0(int,pause)
 static inline __attribute__((always_inline)) _syscall1(int,setup,void *,BIOS)
 static inline __attribute__((always_inline)) _syscall0(int,sync)

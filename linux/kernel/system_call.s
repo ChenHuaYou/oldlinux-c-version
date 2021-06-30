@@ -1,83 +1,5 @@
 	.file	"system_call.cc"
 	.text
-	.globl	sys_call_table
-	.section	.data.rel,"aw",@progbits
-	.align 32
-	.type	sys_call_table, @object
-	.size	sys_call_table, 576
-sys_call_table:
-	.quad	_Z9sys_setupPv
-	.quad	_Z8sys_exiti
-	.quad	_Z8sys_forkv
-	.quad	_Z8sys_readjPci
-	.quad	_Z9sys_writejPci
-	.quad	_Z8sys_openPKcii
-	.quad	_Z9sys_closej
-	.quad	_Z11sys_waitpidiPmi
-	.quad	_Z9sys_creatPKci
-	.quad	_Z8sys_linkPKcS0_
-	.quad	_Z10sys_unlinkPKc
-	.quad	_Z10sys_execvev
-	.quad	_Z9sys_chdirPKc
-	.quad	_Z8sys_timePl
-	.quad	_Z9sys_mknodPKcii
-	.quad	_Z9sys_chmodPKci
-	.quad	_Z9sys_chownPKcii
-	.quad	_Z9sys_breakv
-	.quad	_Z8sys_statPcP4stat
-	.quad	_Z9sys_lseekjli
-	.quad	_Z10sys_getpidv
-	.quad	_Z9sys_mountPcS_i
-	.quad	_Z10sys_umountPc
-	.quad	_Z10sys_setuidi
-	.quad	_Z10sys_getuidv
-	.quad	_Z9sys_stimePl
-	.quad	_Z10sys_ptracev
-	.quad	_Z9sys_alarml
-	.quad	_Z9sys_fstatjP4stat
-	.quad	_Z9sys_pausev
-	.quad	_Z9sys_utimePcP7utimbuf
-	.quad	_Z8sys_sttyv
-	.quad	_Z8sys_gttyv
-	.quad	_Z10sys_accessPKci
-	.quad	_Z8sys_nicel
-	.quad	_Z9sys_ftimev
-	.quad	_Z8sys_syncv
-	.quad	_Z8sys_killii
-	.quad	_Z10sys_renamev
-	.quad	_Z9sys_mkdirPKci
-	.quad	_Z9sys_rmdirPKc
-	.quad	_Z7sys_dupj
-	.quad	_Z8sys_pipePm
-	.quad	_Z9sys_timesP3tms
-	.quad	_Z8sys_profv
-	.quad	_Z7sys_brkm
-	.quad	_Z10sys_setgidi
-	.quad	_Z10sys_getgidv
-	.quad	_Z10sys_signalill
-	.quad	_Z11sys_geteuidv
-	.quad	_Z11sys_getegidv
-	.quad	_Z8sys_acctv
-	.quad	_Z8sys_physv
-	.quad	_Z8sys_lockv
-	.quad	_Z9sys_ioctljjm
-	.quad	_Z9sys_fcntljjm
-	.quad	_Z7sys_mpxv
-	.quad	_Z11sys_setpgidii
-	.quad	_Z10sys_ulimitv
-	.quad	_Z9sys_unameP7utsname
-	.quad	_Z9sys_umaski
-	.quad	_Z10sys_chrootPKc
-	.quad	_Z9sys_ustatiP5ustat
-	.quad	_Z8sys_dup2jj
-	.quad	_Z11sys_getppidv
-	.quad	_Z11sys_getpgrpv
-	.quad	_Z10sys_setsidv
-	.quad	_Z13sys_sigactioniPK9sigactionPS_
-	.quad	_Z12sys_sgetmaskv
-	.quad	_Z12sys_ssetmaski
-	.quad	_Z12sys_setreuidii
-	.quad	_Z12sys_setregidii
 #APP
 	SIG_CHLD=17
 	EAX=0x00
@@ -114,20 +36,57 @@ sys_call_table:
 	jmp schedule
 	
 #NO_APP
-	.text
+	.globl	_Z10sys_execvev
+	.type	_Z10sys_execvev, @function
+_Z10sys_execvev:
+.LFB4:
+	.cfi_startproc
+#APP
+# 293 "system_call.cc" 1
+	lea EIP(%esp),%eax
+	pushl %eax
+	call do_execve
+	addl $4,%esp
+	ret
+	
+# 0 "" 2
+#NO_APP
+	ret
+	.cfi_endproc
+.LFE4:
+	.size	_Z10sys_execvev, .-_Z10sys_execvev
+	.globl	_Z8sys_forkv
+	.type	_Z8sys_forkv, @function
+_Z8sys_forkv:
+.LFB5:
+	.cfi_startproc
+#APP
+# 309 "system_call.cc" 1
+	call find_empty_process
+	testl %eax,%eax
+	js 1f
+	push %gs
+	pushl %esi
+	pushl %edi
+	pushl %ebp
+	pushl %eax
+	call copy_process
+	addl $20,%esp
+	1:	ret
+	
+# 0 "" 2
+#NO_APP
+	ret
+	.cfi_endproc
+.LFE5:
+	.size	_Z8sys_forkv, .-_Z8sys_forkv
 	.globl	_Z11system_callv
 	.type	_Z11system_callv, @function
 _Z11system_callv:
 .LFB0:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movq	current(%rip), %rdx
 #APP
-# 208 "system_call.cc" 1
+# 207 "system_call.cc" 1
 	cmpl $nr_system_calls-1,%eax
 	ja bad_sys_call
 	push %ds
@@ -179,9 +138,6 @@ _Z11system_callv:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE0:
@@ -191,13 +147,8 @@ _Z11system_callv:
 _Z17coprocessor_errorv:
 .LFB1:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 #APP
-# 227 "system_call.cc" 1
+# 226 "system_call.cc" 1
 	push %ds 
 	push %es 
 	push %fs 
@@ -215,9 +166,6 @@ _Z17coprocessor_errorv:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE1:
@@ -227,13 +175,8 @@ _Z17coprocessor_errorv:
 _Z20device_not_availablev:
 .LFB2:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 #APP
-# 257 "system_call.cc" 1
+# 256 "system_call.cc" 1
 	push %ds
 	push %es
 	push %fs
@@ -262,9 +205,6 @@ _Z20device_not_availablev:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE2:
@@ -274,13 +214,8 @@ _Z20device_not_availablev:
 _Z15timer_interruptv:
 .LFB3:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 #APP
-# 283 "system_call.cc" 1
+# 282 "system_call.cc" 1
 	push %ds		# save ds,es and put kernel data space
 	push %es		# into them. %fs is used by _system_call
 	push %fs
@@ -305,85 +240,17 @@ _Z15timer_interruptv:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE3:
 	.size	_Z15timer_interruptv, .-_Z15timer_interruptv
-	.globl	_Z10sys_execvev
-	.type	_Z10sys_execvev, @function
-_Z10sys_execvev:
-.LFB4:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-#APP
-# 294 "system_call.cc" 1
-	lea EIP(%esp),%eax
-	pushl %eax
-	call do_execve
-	addl $4,%esp
-	ret
-	
-# 0 "" 2
-#NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE4:
-	.size	_Z10sys_execvev, .-_Z10sys_execvev
-	.globl	_Z8sys_forkv
-	.type	_Z8sys_forkv, @function
-_Z8sys_forkv:
-.LFB5:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-#APP
-# 310 "system_call.cc" 1
-	call find_empty_process
-	testl %eax,%eax
-	js 1f
-	push %gs
-	pushl %esi
-	pushl %edi
-	pushl %ebp
-	pushl %eax
-	call copy_process
-	addl $20,%esp
-	1:	ret
-	
-# 0 "" 2
-#NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE5:
-	.size	_Z8sys_forkv, .-_Z8sys_forkv
 	.globl	_Z12hd_interruptv
 	.type	_Z12hd_interruptv, @function
 _Z12hd_interruptv:
 .LFB6:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 #APP
-# 344 "system_call.cc" 1
+# 343 "system_call.cc" 1
 	pushl %eax
 	pushl %ecx
 	pushl %edx
@@ -416,9 +283,6 @@ _Z12hd_interruptv:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE6:
@@ -428,13 +292,8 @@ _Z12hd_interruptv:
 _Z16floppy_interruptv:
 .LFB7:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 #APP
-# 375 "system_call.cc" 1
+# 374 "system_call.cc" 1
 	pushl %eax
 	pushl %ecx
 	pushl %edx
@@ -464,9 +323,6 @@ _Z16floppy_interruptv:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE7:
@@ -476,13 +332,8 @@ _Z16floppy_interruptv:
 _Z18parallel_interruptv:
 .LFB8:
 	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 #APP
-# 386 "system_call.cc" 1
+# 385 "system_call.cc" 1
 	pushl %eax
 	movb $0x20,%al
 	outb %al,$0x20
@@ -491,12 +342,87 @@ _Z18parallel_interruptv:
 	
 # 0 "" 2
 #NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE8:
 	.size	_Z18parallel_interruptv, .-_Z18parallel_interruptv
+	.globl	sys_call_table
+	.section	.data.rel,"aw",@progbits
+	.align 32
+	.type	sys_call_table, @object
+	.size	sys_call_table, 288
+sys_call_table:
+	.long	_Z9sys_setupPv
+	.long	_Z8sys_exiti
+	.long	_Z8sys_forkv
+	.long	_Z8sys_readjPci
+	.long	_Z9sys_writejPci
+	.long	_Z8sys_openPKcii
+	.long	_Z9sys_closej
+	.long	_Z11sys_waitpidiPmi
+	.long	_Z9sys_creatPKci
+	.long	_Z8sys_linkPKcS0_
+	.long	_Z10sys_unlinkPKc
+	.long	_Z10sys_execvev
+	.long	_Z9sys_chdirPKc
+	.long	_Z8sys_timePl
+	.long	_Z9sys_mknodPKcii
+	.long	_Z9sys_chmodPKci
+	.long	_Z9sys_chownPKcii
+	.long	_Z9sys_breakv
+	.long	_Z8sys_statPcP4stat
+	.long	_Z9sys_lseekjli
+	.long	_Z10sys_getpidv
+	.long	_Z9sys_mountPcS_i
+	.long	_Z10sys_umountPc
+	.long	_Z10sys_setuidi
+	.long	_Z10sys_getuidv
+	.long	_Z9sys_stimePl
+	.long	_Z10sys_ptracev
+	.long	_Z9sys_alarml
+	.long	_Z9sys_fstatjP4stat
+	.long	_Z9sys_pausev
+	.long	_Z9sys_utimePcP7utimbuf
+	.long	_Z8sys_sttyv
+	.long	_Z8sys_gttyv
+	.long	_Z10sys_accessPKci
+	.long	_Z8sys_nicel
+	.long	_Z9sys_ftimev
+	.long	_Z8sys_syncv
+	.long	_Z8sys_killii
+	.long	_Z10sys_renamev
+	.long	_Z9sys_mkdirPKci
+	.long	_Z9sys_rmdirPKc
+	.long	_Z7sys_dupj
+	.long	_Z8sys_pipePm
+	.long	_Z9sys_timesP3tms
+	.long	_Z8sys_profv
+	.long	_Z7sys_brkm
+	.long	_Z10sys_setgidi
+	.long	_Z10sys_getgidv
+	.long	_Z10sys_signalill
+	.long	_Z11sys_geteuidv
+	.long	_Z11sys_getegidv
+	.long	_Z8sys_acctv
+	.long	_Z8sys_physv
+	.long	_Z8sys_lockv
+	.long	_Z9sys_ioctljjm
+	.long	_Z9sys_fcntljjm
+	.long	_Z7sys_mpxv
+	.long	_Z11sys_setpgidii
+	.long	_Z10sys_ulimitv
+	.long	_Z9sys_unameP7utsname
+	.long	_Z9sys_umaski
+	.long	_Z10sys_chrootPKc
+	.long	_Z9sys_ustatiP5ustat
+	.long	_Z8sys_dup2jj
+	.long	_Z11sys_getppidv
+	.long	_Z11sys_getpgrpv
+	.long	_Z10sys_setsidv
+	.long	_Z13sys_sigactioniPK9sigactionPS_
+	.long	_Z12sys_sgetmaskv
+	.long	_Z12sys_ssetmaski
+	.long	_Z12sys_setreuidii
+	.long	_Z12sys_setregidii
 	.ident	"GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0"
 	.section	.note.GNU-stack,"",@progbits

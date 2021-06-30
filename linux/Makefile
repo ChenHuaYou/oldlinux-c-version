@@ -28,9 +28,9 @@ DRIVERS =kernel/blk_drv/blk_drv.a kernel/chr_drv/chr_drv.a
 MATH	=kernel/math/math.a
 LIBS	=lib/lib.a
 
-#.cc.s:
-#	$(CC) $(CFLAGS) \
-#	-nostdinc -Iinclude -S -o $*.s $<
+.cc.s:
+	$(CC) $(CFLAGS) \
+	-nostdinc -Iinclude -S -o $*.s $<
 .s.o:
 	$(AS) -c -o $*.o $<
 .cc.o:
