@@ -6,12 +6,12 @@ TSS0_SEL	= 0x20
 LDT0_SEL	= 0x28
 TSS1_SEL	= 0X30
 LDT1_SEL	= 0x38
-.global startup_32
+.global startup_32,task0,task1,ignore_int,timer_interrupt,system_interrupt,init_stack
 .text
 startup_32:
 	movl $0x10,%eax
 	mov %ax,%ds
-#	mov %ax,%es
+	mov %ax,%es
 	lss init_stack,%esp
 
 # setup base fields of descriptors.
@@ -34,20 +34,20 @@ startup_32:
 	movb %ah, %al
 	outb %al, %dx
 
-# setup timer & system call interrupt descriptors.
-	movl $0x00080000, %eax	
-	movw $timer_interrupt, %ax
-	movw $0x8E00, %dx
-	movl $0x08, %ecx              # The PC default timer int.
-	lea idt(,%ecx,8), %esi
-	movl %eax,(%esi) 
-	movl %edx,4(%esi)
-	movw $system_interrupt, %ax
-	movw $0xef00, %dx
-	movl $0x80, %ecx
-	lea idt(,%ecx,8), %esi
-	movl %eax,(%esi) 
-	movl %edx,4(%esi)
+## setup timer & system call interrupt descriptors.
+#	movl $0x00080000, %eax	
+#	movw $timer_interrupt, %ax
+#	movw $0x8E00, %dx
+#	movl $0x08, %ecx              # The PC default timer int.
+#	lea idt(,%ecx,8), %esi
+#	movl %eax,(%esi) 
+#	movl %edx,4(%esi)
+#	movw $system_interrupt, %ax
+#	movw $0xef00, %dx
+#	movl $0x80, %ecx
+#	lea idt(,%ecx,8), %esi
+#	movl %eax,(%esi) 
+#	movl %edx,4(%esi)
 
 # unmask the timer interrupt.
 #	movl $0x21, %edx
@@ -73,25 +73,26 @@ startup_32:
 	iret
 
 /****************************************/
-setup_gdt:
-	lgdt lgdt_opcode
-	ret
+#setup_gdt:
+#	lgdt lgdt_opcode
+#	ret
 
-setup_idt:
-	lea ignore_int,%edx
-	movl $0x00080000,%eax
-	movw %dx,%ax		/* selector = 0x0008 = cs */
-	movw $0x8E00,%dx	/* interrupt gate - dpl=0, present */
-	lea idt,%edi
-	mov $256,%ecx
-rp_sidt:
-	movl %eax,(%edi)
-	movl %edx,4(%edi)
-	addl $8,%edi
-	dec %ecx
-	jne rp_sidt
-	lidt lidt_opcode
-	ret
+#setup_idt:
+#	lea ignore_int,%edx
+#	movl $0x00080000,%eax
+#	movw %dx,%ax		/* selector = 0x0008 = cs */
+#	movw $0x8E00,%dx	/* interrupt gate - dpl=0, present */
+#	lea idt,%edi
+#	mov $256,%ecx
+#rp_sidt:
+#	movl %eax,(%edi)
+#	movl %edx,4(%edi)
+#	addl $8,%edi
+#	dec %ecx
+#	jne rp_sidt
+#	lidt idtr
+#	#lidt lidt_opcode
+#	ret
 
 # -----------------------------------
 write_char:
@@ -171,27 +172,26 @@ system_interrupt:
 current:.long 0
 scr_loc:.long 0
 
-.align 2
-lidt_opcode:
-	.word 256*8-1		# idt contains 256 entries
-	.long idt		# This will be rewrite by code. 
-lgdt_opcode:
-	.word (end_gdt-gdt)-1	# so does gdt 
-	.long gdt		# This will be rewrite by code.
+#.align 2
+#idtr:
+#	.word 256*8		# idt contains 256 entries
+#	.long idt		# This will be rewrite by code. 
+#lgdt_opcode:
+#	.word (end_gdt-gdt)-1	# so does gdt 
+#	.long gdt		# This will be rewrite by code.
+#
+#	.align 8
 
-	.align 8
-idt:	.fill 256,8,0		# idt is uninitialized
-
-gdt:	.quad 0x0000000000000000	/* NULL descriptor */
-	.quad 0x00c09a00000007ff	/* 8Mb 0x08, base = 0x00000 */
-	.quad 0x00c09200000007ff	/* 8Mb 0x10 */
-	.quad 0x00c0920b80000002	/* screen 0x18 - for display */
-
-	.word 0x0068, tss0, 0xe900, 0x0	# TSS0 descr 0x20
-	.word 0x0040, ldt0, 0xe200, 0x0	# LDT0 descr 0x28
-	.word 0x0068, tss1, 0xe900, 0x0	# TSS1 descr 0x30
-	.word 0x0040, ldt1, 0xe200, 0x0	# LDT1 descr 0x38
-end_gdt:
+#gdt:	.quad 0x0000000000000000	/* NULL descriptor */
+#	.quad 0x00c09a00000007ff	/* 8Mb 0x08, base = 0x00000 */
+#	.quad 0x00c09200000007ff	/* 8Mb 0x10 */
+#	.quad 0x00c0920b80000002	/* screen 0x18 - for display */
+#
+#	.word 0x0068, tss0, 0xe900, 0x0	# TSS0 descr 0x20
+#	.word 0x0040, ldt0, 0xe200, 0x0	# LDT0 descr 0x28
+#	.word 0x0068, tss1, 0xe900, 0x0	# TSS1 descr 0x30
+#	.word 0x0040, ldt1, 0xe200, 0x0	# LDT1 descr 0x38
+#end_gdt:
 	.fill 128,4,0
 init_stack:                          # Will be used as user stack for task0.
 	.long init_stack

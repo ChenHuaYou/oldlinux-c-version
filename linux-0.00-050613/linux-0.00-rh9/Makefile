@@ -3,7 +3,12 @@ AS86	=as86 -0 -a
 LD86	=ld86 -0
 AS	=as --32
 LD	=ld
-LDFLAGS =-m elf_i386 -Ttext 0 -e startup_32 -s -x -M  
+LDFLAGS =-m elf_i386 -Ttext 0 -e startup_32
+
+CC	=gcc -march=i386 -m32
+CFLAGS	=-Wall -O1 -fstrength-reduce -fomit-frame-pointer \
+	-finline-functions -nostdinc -I./ -fno-stack-protector -fno-builtin -g
+
 
 all:	Image
 
@@ -18,8 +23,11 @@ disk: Image
 
 head.o: head.s
 
-system:	head.o 
-	$(LD) $(LDFLAGS) head.o  -o system > System.map
+kernel.o: kernel.cc
+	$(CC) $(CFLAGS) -c -o kernel.o kernel.cc
+
+system:	head.o kernel.o
+	$(LD) $(LDFLAGS) head.o kernel.o -o system > System.map
 
 boot:	boot.s
 	$(AS86) -o boot.o boot.s
