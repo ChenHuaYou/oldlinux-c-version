@@ -197,41 +197,41 @@ init_stack:                          # Will be used as user stack for task0.
 	.long init_stack
 	.word 0x10
 
-/*************************************/
-.align 8
-ldt0:	.quad 0x0000000000000000
-	.quad 0x00c0fa00000003ff	# 0x0f, base = 0x00000
-	.quad 0x00c0f200000003ff	# 0x17
-
-tss0:	.long 0 			/* back link */
-	.long krn_stk0, 0x10		/* esp0, ss0 */
-	.long 0, 0, 0, 0, 0		/* esp1, ss1, esp2, ss2, cr3 */
-	.long 0, 0, 0, 0, 0		/* eip, eflags, eax, ecx, edx */
-	.long 0, 0, 0, 0, 0		/* ebx esp, ebp, esi, edi */
-	.long 0, 0, 0, 0, 0, 0 		/* es, cs, ss, ds, fs, gs */
-	.long LDT0_SEL, 0x8000000	/* ldt, trace bitmap */
-
-	.fill 128,4,0
-krn_stk0:
-#	.long 0
-
-/************************************/
-.align 8
-ldt1:	.quad 0x0000000000000000
-	.quad 0x00c0fa00000003ff	# 0x0f, base = 0x00000
-	.quad 0x00c0f200000003ff	# 0x17
-
-tss1:	.long 0 			/* back link */
-	.long krn_stk1, 0x10		/* esp0, ss0 */
-	.long 0, 0, 0, 0, 0		/* esp1, ss1, esp2, ss2, cr3 */
-	.long task1, 0x200		/* eip, eflags */
-	.long 0, 0, 0, 0		/* eax, ecx, edx, ebx */
-	.long usr_stk1, 0, 0, 0		/* esp, ebp, esi, edi */
-	.long 0x17,0x0f,0x17,0x17,0x17,0x17 /* es, cs, ss, ds, fs, gs */
-	.long LDT1_SEL, 0x8000000	/* ldt, trace bitmap */
-
-	.fill 128,4,0
-krn_stk1:
+#/*************************************/
+#.align 8
+#ldt0:	.quad 0x0000000000000000
+#	.quad 0x00c0fa00000003ff	# 0x0f, base = 0x00000
+#	.quad 0x00c0f200000003ff	# 0x17
+#
+#tss0:	.long 0 			/* back link */
+#	.long krn_stk0, 0x10		/* esp0, ss0 */
+#	.long 0, 0, 0, 0, 0		/* esp1, ss1, esp2, ss2, cr3 */
+#	.long 0, 0, 0, 0, 0		/* eip, eflags, eax, ecx, edx */
+#	.long 0, 0, 0, 0, 0		/* ebx esp, ebp, esi, edi */
+#	.long 0, 0, 0, 0, 0, 0 		/* es, cs, ss, ds, fs, gs */
+#	.long LDT0_SEL, 0x8000000	/* ldt, trace bitmap */
+#
+#	.fill 128,4,0
+#krn_stk0:
+##	.long 0
+#
+#/************************************/
+#.align 8
+#ldt1:	.quad 0x0000000000000000
+#	.quad 0x00c0fa00000003ff	# 0x0f, base = 0x00000
+#	.quad 0x00c0f200000003ff	# 0x17
+#
+#tss1:	.long 0 			/* back link */
+#	.long krn_stk1, 0x10		/* esp0, ss0 */
+#	.long 0, 0, 0, 0, 0		/* esp1, ss1, esp2, ss2, cr3 */
+#	.long task1, 0x200		/* eip, eflags */
+#	.long 0, 0, 0, 0		/* eax, ecx, edx, ebx */
+#	.long usr_stk1, 0, 0, 0		/* esp, ebp, esi, edi */
+#	.long 0x17,0x0f,0x17,0x17,0x17,0x17 /* es, cs, ss, ds, fs, gs */
+#	.long LDT1_SEL, 0x8000000	/* ldt, trace bitmap */
+#
+#	.fill 128,4,0
+#krn_stk1:
 
 /************************************/
 task0:
@@ -252,5 +252,5 @@ task1:
 1:	loop 1b
 	jmp task1
 
-	.fill 128,4,0 
-usr_stk1:
+#	.fill 128,4,0 
+#usr_stk1:
