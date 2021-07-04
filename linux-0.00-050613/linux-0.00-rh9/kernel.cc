@@ -36,7 +36,7 @@ void setup_gdt(){
             0,/* back link */
             (long)(&task[0].kstack+sizeof(task[0].kstack)), 0x10,		/* esp0, ss0 */
             0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-            (long)task0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
+            0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
             0, 0, 0, 0, 0,		/* ebx esp, ebp, esi, edi */
             0, 0, 0, 0, 0, 0, 		/* es, cs, ss, ds, fs, gs */
             LDT0_SEL, 0x8000000/* ldt, trace bitmap */
@@ -52,10 +52,10 @@ void setup_gdt(){
             0,/* back link */
             (long)(&task[1].kstack+sizeof(task[1].kstack)), 0x10,		/* esp0, ss0 */
             0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-            (long)task1, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
+            (long)task1, 0x200, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
             0, (long)(&task[1].ustack+sizeof(task[1].ustack)), 0, 0, 0,		/* ebx esp, ebp, esi, edi */
             0x17, 0x0f, 0x17, 0x17, 0x17, 0x17, 		/* es, cs, ss, ds, fs, gs */
-            LDT0_SEL, 0x8000000/* ldt, trace bitmap */
+            LDT1_SEL, 0x8000000/* ldt, trace bitmap */
         },	    
     };
 
