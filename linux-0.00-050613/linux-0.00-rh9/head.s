@@ -8,6 +8,9 @@ TSS1_SEL	= 0X30
 LDT1_SEL	= 0x38
 .global startup_32,task0,task1,ignore_int,timer_interrupt,system_interrupt,init_stack
 .text
+
+pg_dir:
+
 startup_32:
 	movl $0x10,%eax
 	mov %ax,%ds
@@ -50,6 +53,19 @@ startup_32:
 	pushl $0xf
 	pushl $task0
 	iret
+.org 0x1000
+pg0:
+
+.org 0x2000
+pg1:
+
+.org 0x3000
+pg2:
+
+.org 0x4000
+pg3:
+
+.org 0x5000
 
 # -----------------------------------
 write_char:
@@ -152,17 +168,3 @@ init_stack:                          # Will be used as user stack for task0.
 	.long init_stack
 	.word 0x10
 
-.pg_dir:
-.fill 1024,4,0
-
-pg0:
-.fill 1024,4,0
-
-#pg1:
-#.fill 1024,4,0
-
-#pg2:
-#.fill 1024,4,0
-
-#pg3:
-#.fill 1024,4,0
