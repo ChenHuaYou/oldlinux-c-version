@@ -5,7 +5,7 @@
 
 BOOTSEG = 0x07c0
 SYSSEG  = 0x1000			! system loaded at 0x10000 (65536).
-SYSLEN  = 17				! sectors occupied.
+SYSLEN  = 40				! sectors occupied.
 
 entry start
 start:
@@ -29,16 +29,16 @@ die:	jmp	die
 
 ! now we want to move to protected mode ...
 ok_load:
-	cli			! no interrupts allowed !
-	mov	ax, #SYSSEG
-	mov	ds, ax
-	xor	ax, ax
-	mov	es, ax
-	mov	cx, #0x2000
-	sub	si,si
-	sub	di,di
-	rep
-	movw
+	!cli			! no interrupts allowed !
+	!mov	ax, #SYSSEG
+	!mov	ds, ax
+	!xor	ax, ax
+	!mov	es, ax
+	!mov	cx, #0x2000
+	!sub	si,si
+	!sub	di,di
+	!rep
+	!movw
 	mov	ax, #BOOTSEG
 	mov	ds, ax
 	lidt	idt_48		! load idt with 0,0
@@ -47,18 +47,18 @@ ok_load:
 ! absolute address 0x00000, in 32-bit protected mode.
 	mov	ax,#0x0001	! protected mode (PE) bit
 	lmsw	ax		! This is it!
-	jmpi	0,8		! jmp offset 0 of segment 8 (cs)
+	jmpi	#0x0,8		! jmp offset 0 of segment 8 (cs)
 
 gdt:	.word	0,0,0,0		! dummy
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)
 	.word	0x0000		! base address=0x00000
-	.word	0x9A00		! code read/exec
+	.word	0x9A01		! code read/exec
 	.word	0x00C0		! granularity=4096, 386
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)
 	.word	0x0000		! base address=0x00000
-	.word	0x9200		! data read/write
+	.word	0x9201		! data read/write
 	.word	0x00C0		! granularity=4096, 386
 
 idt_48: .word	0		! idt limit=0

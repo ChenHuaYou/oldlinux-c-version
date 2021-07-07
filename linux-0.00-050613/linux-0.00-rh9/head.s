@@ -125,16 +125,6 @@ system_interrupt:
 	pop %ds
 	iret
 
-/*********************************************/
-current:.long 0
-scr_loc:.long 0
-
-.fill 128,4,0
-init_stack:                          # Will be used as user stack for task0.
-	.long init_stack
-	.word 0x10
-
-
 /************************************/
 task0:
 	movl $0x17, %eax
@@ -154,3 +144,25 @@ task1:
 1:	loop 1b
 	jmp task1
 
+current:.long 0
+scr_loc:.long 0
+
+.fill 128,4,0
+init_stack:                          # Will be used as user stack for task0.
+	.long init_stack
+	.word 0x10
+
+.pg_dir:
+.fill 1024,4,0
+
+pg0:
+.fill 1024,4,0
+
+#pg1:
+#.fill 1024,4,0
+
+#pg2:
+#.fill 1024,4,0
+
+#pg3:
+#.fill 1024,4,0

@@ -60,8 +60,8 @@ void setup_gdt(){
     };
 
     gdt[0] = {0x0000,0x0000,0x0000,0x0000};/* NULL descriptor */
-    gdt[1] = {0x07ff,0x0000,0x9a00,0x00c0};/* 8Mb 0x08, base = 0x00000 */
-    gdt[2] = {0x07ff,0x0000,0x9200,0x00c0};/* 8Mb 0x10 */
+    gdt[1] = {0x07ff,0x0000,0x9a01,0x00c0};/* 8Mb 0x08, base = 0x00000 */
+    gdt[2] = {0x07ff,0x0000,0x9201,0x00c0};/* 8Mb 0x10 */
     gdt[3] = {0x0002,0x8000,0x920b,0x00c0};/* screen 0x18 - for display */
     gdt[4] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 0x20 */
     gdt[5] = {sizeof(task[0].ldt), (u16)(long)(&task[0].ldt), 0xe200, 0x0000};/* LDT0 descr 0x28 */
@@ -72,3 +72,8 @@ void setup_gdt(){
     __asm__ __volatile__ ("lgdt gdtr");
 }
 
+extern "C"
+void setup_paging(void){
+    
+
+}
