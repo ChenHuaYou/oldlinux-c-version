@@ -60,13 +60,19 @@ void setup_gdt(){
     };
 
     gdt[0] = {0x0000,0x0000,0x0000,0x0000};/* NULL descriptor */
-    gdt[1] = {0x07ff,0x0000,0x9a00,0x00c0};/* 8Mb 0x08, base = 0x00000 */
-    gdt[2] = {0x07ff,0x0000,0x9200,0x00c0};/* 8Mb 0x10 */
-    gdt[3] = {0x0002,0x8000,0x920b,0x00c0};/* screen 0x18 - for display */
-    gdt[4] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 0x20 */
-    gdt[5] = {sizeof(task[0].ldt), (u16)(long)(&task[0].ldt), 0xe200, 0x0000};/* LDT0 descr 0x28 */
-    gdt[6] = {sizeof(task[1].tss), (u16)(long)(&task[1].tss), 0xe900, 0x0000};/* TSS1 descr 0x30 */
-    gdt[7] = {sizeof(task[1].ldt), (u16)(long)(&task[1].ldt), 0xe200, 0x0000};/*LDT1 descr 0x38 */
+
+    gdt[1] = {0x07ff,0x0000,0x9a00,0x00c0};/* 8Mb 0x08 = 1*8+0, base = 0x00000 */
+    gdt[2] = {0x07ff,0x0000,0x9200,0x00c0};/* 8Mb 0x10 = 2*8+0 */
+
+    gdt[3] = {0x0002,0x8000,0x920b,0x00c0};/* screen 0x18 = 3*8+0 for display */
+
+    gdt[4] = {0x03ff,0x0000,0xfa00,0x00c0}; /* user code 4*8+3 = 0x23 */
+    gdt[5] = {0x03ff,0x0000,0xf200,0x00c0};/* user data 5*8+3 = 0x2b */
+
+    gdt[6] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 6*8+0=0x30 */
+    //gdt[5] = {sizeof(task[0].ldt), (u16)(long)(&task[0].ldt), 0xe200, 0x0000};/* LDT0 descr 0x28 */
+    gdt[7] = {sizeof(task[1].tss), (u16)(long)(&task[1].tss), 0xe900, 0x0000};/* TSS1 descr 7*8+0=0x38 */
+    //gdt[7] = {sizeof(task[1].ldt), (u16)(long)(&task[1].ldt), 0xe200, 0x0000};/*LDT1 descr 0x38 */
 
     gdtr = {256*sizeof(DT),(u32)gdt};
     __asm__ __volatile__ ("lgdt gdtr");
