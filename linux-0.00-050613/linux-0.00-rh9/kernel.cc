@@ -72,8 +72,27 @@ void setup_gdt(){
     __asm__ __volatile__ ("lgdt gdtr");
 }
 
-extern "C"
-void setup_paging(void){
-    
 
+extern "C"
+void setup_paging(const u32 *pg_dir, u16 pg_num){
+    u32 *p = (u32 *)pg_dir;
+    // set 1(dir table)+4(page table) to 0
+    for(int i=0; i<1024*5; i++){
+        *(p+i) = 0;
+    }
+    // setup directory table
+    for(int i=0;i<pg_num;i++){
+        *(p+i) = (i+1) * 0x1000+0x7; 
+    }
+    // setup page table
+    for(int i=0; i<1024*pg_num; i++){
+        *(p+0x1000+i) = 0x0 + i*0x1000;
+    }
+    __asm__ __volatile__(
+            "movl %[pg_dir],%%cr3\n\t"
+            "movl %%cr0,%%eax\n\t"
+            "orl $0x80000000,%%eax\n\t"
+            "movl %%eax,%%cr0\n\t"
+            ::[pg_dir]"a"(pg_dir)
+            );
 }

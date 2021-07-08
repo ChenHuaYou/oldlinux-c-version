@@ -26,6 +26,9 @@ startup_32:
 	mov %ax,%fs
 	mov %ax,%gs
 	lss init_stack,%esp
+    #push $4
+    #pushl $pg_dir
+    #call setup_paging
 
 # setup up timer 8253 chip.
 	movb $0x36, %al
