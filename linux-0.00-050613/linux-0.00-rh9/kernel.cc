@@ -77,7 +77,7 @@ extern "C"
 void setup_paging(const u32 *pg_dir, u16 pg_num){
     u32 *p = (u32 *)pg_dir;
     // set 1(dir table)+4(page table) to 0
-    for(int i=0; i<1024*5; i++){
+    for(int i=0; i<1024*(1+pg_num); i++){
         *(p+i) = 0;
     }
     // setup directory table
