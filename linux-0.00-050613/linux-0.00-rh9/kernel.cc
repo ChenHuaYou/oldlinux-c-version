@@ -85,8 +85,9 @@ void setup_paging(const u32 *pg_dir, u16 pg_num){
         *(p+i) = (i+1) * 0x1000+0x7; 
     }
     // setup page table
-    for(int i=0; i<1024*pg_num; i++){
-        *(p+0x1000+i) = 0x0 + i*0x1000;
+    for(int i=0; i<pg_num*1024; i++){
+        *(p+1024+i) = 0x0 + i*0x1000 + 0x7;
+        //*(p+i) = 0x0 + i*0x1000 + 0x7;
     }
     __asm__ __volatile__(
             "movl %[pg_dir],%%cr3\n\t"
