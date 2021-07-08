@@ -26,8 +26,6 @@ startup_32:
 	mov %ax,%fs
 	mov %ax,%gs
 	lss init_stack,%esp
-    pushw $2
-    pushl $pg_dir
 
 # setup up timer 8253 chip.
 	movb $0x36, %al
@@ -39,7 +37,9 @@ startup_32:
 	movb %ah, %al
 	outb %al, %dx
 
-    pushl move_to_user_mode
+    pushw $2
+    pushl $pg_dir
+    pushl $move_to_user_mode
     jmp setup_paging
 
 .org 0x1000
