@@ -46,10 +46,10 @@ struct TSS {
 
 
 struct Task{
-    DT ldt[3];
+    //DT ldt[3];
     TSS tss;
-    char kstack[128];
-    char ustack[128];
+    //char kstack[128];
+    //char ustack[128];
 };
 
 
@@ -59,3 +59,9 @@ extern "C" void system_interrupt(void);
 extern "C" void task1(void);
 extern "C" void task0(void);
 extern "C" u32 init_stack;
+
+class memory{
+    public:
+        static void init(void);
+        static u32 get_free_page(void);
+};

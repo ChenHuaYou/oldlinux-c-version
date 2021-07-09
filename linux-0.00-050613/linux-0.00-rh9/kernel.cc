@@ -1,37 +1,30 @@
 #include "kernel.h"
 
 Task task[256];
-DT idt[256]={0};
 DT gdt[256];
 DTR idtr;
 DTR gdtr;
 
-extern "C"
 void setup_idt(){
-    idtr = {256*sizeof(DT),(u32)idt};
+    DT *p = (DT*)memory::get_free_page();
+    idtr = {256*sizeof(DT),(u32)p};
     for(int i=0; i<256; i++){
-        idt[i].w0 = (u32)ignore_int & 0x0000FFFF;
-        idt[i].w1 = 0x0008;
-        idt[i].w2 = 0x8E00;
-        idt[i].w3 = 0x0;
+        p[i].w0 = (u32)ignore_int & 0x0000FFFF;
+        p[i].w1 = 0x0008;
+        p[i].w2 = 0x8E00;
+        p[i].w3 = 0x0;
     }
     // setup timer & system call interrupt descriptors.
-    idt[0x8].w0 = (u32)timer_interrupt;
-    idt[0x80].w0 = (u32)system_interrupt;
-    idt[0x80].w2 = 0xEF00;
+    p[0x8].w0 = (u32)timer_interrupt;
+    p[0x80].w0 = (u32)system_interrupt;
+    p[0x80].w2 = 0xEF00;
     __asm__ __volatile__ ("lidt idtr");
 }
 
-extern "C"
 void setup_gdt(){
 
     task[0]=
     {
-        {
-            {0x0000,0x0000,0x0000,0x0000},
-            {0x03ff,0x0000,0xfa00,0x00c0},
-            {0x03ff,0x0000,0xf200,0x00c0},
-        },
         {
             0,/* back link */
             (long)(&task[0].kstack+sizeof(task[0].kstack)), 0x10,		/* esp0, ss0 */
@@ -102,4 +95,14 @@ void setup_paging(const u32 *pg_dir, u16 pg_num){
             "movl %%eax,%%cr0\n\t"
             ::[pg_dir]"a"(pg_dir)
             );
+}
+
+void move_to_user_mode();
+
+extern "C"
+void kmain(void){
+    memory::init();
+    setup_idt();
+    setup_gdt();
+    move_to_user_mode();
 }

@@ -9,39 +9,9 @@ LDT1_SEL	= 0x38
 .global startup_32,task0,task1,ignore_int,timer_interrupt,system_interrupt,init_stack
 .text
 
+.org 0x0
 pg_dir:
-
-startup_32:
-	movl $0x10,%eax
-	mov %ax,%ds
-	mov %ax,%es
-	lss init_stack,%esp
-
-# setup base fields of descriptors.
-	call setup_idt
-	call setup_gdt
-	movl $0x10,%eax		# reload all the segment registers
-	mov %ax,%ds		# after changing gdt. 
-	mov %ax,%es
-	mov %ax,%fs
-	mov %ax,%gs
-	lss init_stack,%esp
-
-# setup up timer 8253 chip.
-	movb $0x36, %al
-	movl $0x43, %edx
-	outb %al, %dx
-	movl $11930, %eax        # timer frequency 100 HZ 
-	movl $0x40, %edx
-	outb %al, %dx
-	movb %ah, %al
-	outb %al, %dx
-
-    pushw $2
-    pushl $pg_dir
-    pushl $move_to_user_mode
-    jmp setup_paging
-
+    jmp startup_32
 .org 0x1000
 pg0:
 
@@ -56,7 +26,41 @@ pg3:
 
 .org 0x5000
 
-# -----------------------------------
+startup_32:
+# setup up timer 8253 chip.
+	movb $0x36, %al
+	movl $0x43, %edx
+	outb %al, %dx
+	movl $11930, %eax        # timer frequency 100 HZ 
+	movl $0x40, %edx
+	outb %al, %dx
+	movb %ah, %al
+	outb %al, %dx
+
+	movl $0x10,%eax
+	mov %ax,%ds
+	mov %ax,%es
+	lss init_stack,%esp
+    pushw $4
+    pushl $pg_dir
+    pushl $kmain
+    jmp setup_paging
+
+# setup base fields of descriptors.
+	call setup_idt
+	call setup_gdt
+	movl $0x10,%eax		# reload all the segment registers
+	mov %ax,%ds		# after changing gdt. 
+	mov %ax,%es
+	mov %ax,%fs
+	mov %ax,%gs
+	lss init_stack,%esp
+
+
+    pushw $2
+    pushl $pg_dir
+    pushl $move_to_user_mode
+    jmp setup_paging
 
 move_to_user_mode:
 # Move to user mode (task 0)
