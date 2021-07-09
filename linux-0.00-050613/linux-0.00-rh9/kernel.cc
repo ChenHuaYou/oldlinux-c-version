@@ -1,12 +1,10 @@
 #include "kernel.h"
 
-Task task[256];
-DT gdt[256];
 DTR idtr;
 DTR gdtr;
 
-void setup_idt(){
-    DT *p = (DT*)memory::get_free_page();
+void IDT::init(){
+    DT *p = (DT*)Memory::get_free_page();
     idtr = {256*sizeof(DT),(u32)p};
     for(int i=0; i<256; i++){
         p[i].w0 = (u32)ignore_int & 0x0000FFFF;
@@ -18,57 +16,58 @@ void setup_idt(){
     p[0x8].w0 = (u32)timer_interrupt;
     p[0x80].w0 = (u32)system_interrupt;
     p[0x80].w2 = 0xEF00;
-    __asm__ __volatile__ ("lidt idtr");
+    __asm__ __volatile__ ("lidt %[idtr]"::[idtr]"a"(&idtr));
 }
 
-void setup_gdt(){
+void GDT::init(){
+    DT *p = (DT*)Memory::get_free_page();
 
-    task[0]=
-    {
-        {
-            0,/* back link */
-            (long)(&task[0].kstack+sizeof(task[0].kstack)), 0x10,		/* esp0, ss0 */
-            0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-            0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
-            0, 0, 0, 0, 0,		/* ebx esp, ebp, esi, edi */
-            0, 0, 0, 0, 0, 0, 		/* es, cs, ss, ds, fs, gs */
-            LDT0_SEL, 0x8000000/* ldt, trace bitmap */
-        },	    
-    };
-    task[1]={
-        {
-            {0x0000,0x0000,0x0000,0x0000},
-            {0x03ff,0x0000,0xfa00,0x00c0},
-            {0x03ff,0x0000,0xf200,0x00c0},
-        },
-        {
-            0,/* back link */
-            (long)(&task[1].kstack+sizeof(task[1].kstack)), 0x10,		/* esp0, ss0 */
-            0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-            (long)task1, 0x200, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
-            0, (long)(&task[1].ustack+sizeof(task[1].ustack)), 0, 0, 0,		/* ebx esp, ebp, esi, edi */
-            0x17, 0x0f, 0x17, 0x17, 0x17, 0x17, 		/* es, cs, ss, ds, fs, gs */
-            LDT1_SEL, 0x8000000/* ldt, trace bitmap */
-        },	    
-    };
+//    task[0]=
+//    {
+//        {
+//            0,/* back link */
+//            (long)(&task[0].kstack+sizeof(task[0].kstack)), 0x10,		/* esp0, ss0 */
+//            0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
+//            0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
+//            0, 0, 0, 0, 0,		/* ebx esp, ebp, esi, edi */
+//            0, 0, 0, 0, 0, 0, 		/* es, cs, ss, ds, fs, gs */
+//            LDT0_SEL, 0x8000000/* ldt, trace bitmap */
+//        },	    
+//    };
+//    task[1]={
+//        {
+//            {0x0000,0x0000,0x0000,0x0000},
+//            {0x03ff,0x0000,0xfa00,0x00c0},
+//            {0x03ff,0x0000,0xf200,0x00c0},
+//        },
+//        {
+//            0,/* back link */
+//            (long)(&task[1].kstack+sizeof(task[1].kstack)), 0x10,		/* esp0, ss0 */
+//            0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
+//            (long)task1, 0x200, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
+//            0, (long)(&task[1].ustack+sizeof(task[1].ustack)), 0, 0, 0,		/* ebx esp, ebp, esi, edi */
+//            0x17, 0x0f, 0x17, 0x17, 0x17, 0x17, 		/* es, cs, ss, ds, fs, gs */
+//            LDT1_SEL, 0x8000000/* ldt, trace bitmap */
+//        },	    
+//    };
+//
+    p[0] = {0x0000,0x0000,0x0000,0x0000};/* NULL descriptor */
 
-    gdt[0] = {0x0000,0x0000,0x0000,0x0000};/* NULL descriptor */
+    p[1] = {0x07ff,0x0000,0x9a00,0x00c0};/* 8Mb 0x08 = 1*8+0, base = 0x00000 */
+    p[2] = {0x07ff,0x0000,0x9200,0x00c0};/* 8Mb 0x10 = 2*8+0 */
 
-    gdt[1] = {0x07ff,0x0000,0x9a00,0x00c0};/* 8Mb 0x08 = 1*8+0, base = 0x00000 */
-    gdt[2] = {0x07ff,0x0000,0x9200,0x00c0};/* 8Mb 0x10 = 2*8+0 */
+    p[3] = {0x0002,0x8000,0x920b,0x00c0};/* screen 0x18 = 3*8+0 for display */
 
-    gdt[3] = {0x0002,0x8000,0x920b,0x00c0};/* screen 0x18 = 3*8+0 for display */
+    p[4] = {0x03ff,0x0000,0xfa00,0x00c0}; /* user code 4*8+3 = 0x23 */
+    p[5] = {0x03ff,0x0000,0xf200,0x00c0};/* user data 5*8+3 = 0x2b */
 
-    gdt[4] = {0x03ff,0x0000,0xfa00,0x00c0}; /* user code 4*8+3 = 0x23 */
-    gdt[5] = {0x03ff,0x0000,0xf200,0x00c0};/* user data 5*8+3 = 0x2b */
+    //gdt[6] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 6*8+0=0x30 */
+    //gdt[7] = {sizeof(task[1].tss), (u16)(long)(&task[1].tss), 0xe900, 0x0000};/* TSS1 descr 7*8+0=0x38 */
 
-    gdt[6] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 6*8+0=0x30 */
-    //gdt[5] = {sizeof(task[0].ldt), (u16)(long)(&task[0].ldt), 0xe200, 0x0000};/* LDT0 descr 0x28 */
-    gdt[7] = {sizeof(task[1].tss), (u16)(long)(&task[1].tss), 0xe900, 0x0000};/* TSS1 descr 7*8+0=0x38 */
-    //gdt[7] = {sizeof(task[1].ldt), (u16)(long)(&task[1].ldt), 0xe200, 0x0000};/*LDT1 descr 0x38 */
+    gdtr = {256*sizeof(DT),(u32)p};
+    __asm__ __volatile__ ("lgdt %[gdtr]"::[gdtr]"a"(gdtr));
 
-    gdtr = {256*sizeof(DT),(u32)gdt};
-    __asm__ __volatile__ ("lgdt gdtr");
+    count = 6;
 }
 
 
@@ -97,12 +96,16 @@ void setup_paging(const u32 *pg_dir, u16 pg_num){
             );
 }
 
-void move_to_user_mode();
+u8 Schedule::fork(){
+
+
+}
+
 
 extern "C"
 void kmain(void){
-    memory::init();
-    setup_idt();
-    setup_gdt();
+    Memory::init();
+    IDT::init();
+    GDT::init();
     move_to_user_mode();
 }

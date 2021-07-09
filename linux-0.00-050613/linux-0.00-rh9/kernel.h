@@ -59,9 +59,28 @@ extern "C" void system_interrupt(void);
 extern "C" void task1(void);
 extern "C" void task0(void);
 extern "C" u32 init_stack;
+void move_to_user_mode();
 
-class memory{
+class Memory{
     public:
         static void init(void);
         static u32 get_free_page(void);
 };
+
+class GDT{
+    static u8 count;
+    public:
+        static void init(void);
+        static void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
+};
+
+class IDT{
+    public:
+        static void init(void);
+        static void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
+};
+
+class Schedule{
+    public:
+        static u8 fork(void);
+}
