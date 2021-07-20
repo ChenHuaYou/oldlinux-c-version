@@ -17,7 +17,6 @@ struct DTR{
     u16 limit;
     u32 base;
 }__attribute__ ((packed));
-
 struct DT{
     u16 w0;
     u16 w1;
@@ -75,12 +74,13 @@ class Memory{
 };
 
 class GDT{
-    static u8 count;
-    static DTR gdtr;
+    u8 count;
+    DTR gdtr;
     public:
-        static void init(void);
-        static void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
+        void init(void);
+        void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
 };
+extern GDT gdt;
 
 class IDT{
     static DTR idtr;

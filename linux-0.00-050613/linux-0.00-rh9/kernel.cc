@@ -130,7 +130,7 @@ extern "C"
 void kmain(void){
     Memory::init();
     IDT::init();
-    GDT::init();
+    gdt.init();
     move_to_user_mode();
     if(Schedule::fork()!=0){
         while(1) io.putc('a');
