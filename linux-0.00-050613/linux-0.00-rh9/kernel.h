@@ -4,6 +4,8 @@ typedef unsigned long u32;
 typedef unsigned long long u64;
 #define LDT0_SEL 0x28
 #define LDT1_SEL 0x38
+#define asmv 		__asm__ __volatile__
+
 
 //descriptor table register
 struct DTR{
@@ -69,12 +71,14 @@ class Memory{
 
 class GDT{
     static u8 count;
+    static DTR gdtr;
     public:
         static void init(void);
         static void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
 };
 
 class IDT{
+    static DTR idtr;
     public:
         static void init(void);
         static void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
@@ -83,4 +87,9 @@ class IDT{
 class Schedule{
     public:
         static u8 fork(void);
-}
+};
+
+class IO{
+    public:
+        static void write_char(char c);
+};

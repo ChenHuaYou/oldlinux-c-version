@@ -80,25 +80,6 @@ move_to_user_mode:
 	pushl $task0
 	iret
 
-write_char:
-	push %gs
-	pushl %ebx
-#	pushl %eax
-	mov $SCRN_SEL, %ebx
-	mov %bx, %gs
-	movl scr_loc, %ebx
-	shl $1, %ebx
-	movb %al, %gs:(%ebx)
-	shr $1, %ebx
-	incl %ebx
-	cmpl $2000, %ebx
-	jb 1f
-	movl $0, %ebx
-1:	movl %ebx, scr_loc	
-#	popl %eax
-	popl %ebx
-	pop %gs
-	ret
 
 /***********************************************/
 /* This is the default interrupt "handler" :-) */

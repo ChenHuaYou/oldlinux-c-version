@@ -1,7 +1,26 @@
 #include "kernel.h"
 
-DTR idtr;
-DTR gdtr;
+
+void IO::write_char(char c){
+    __asm__ __volatile__(
+            "push %gs \n\t"
+            "pushl %ebx \n\t"
+            "mov $SCRN_SEL, %ebx\n\t"
+            "mov %bx, %gs\n\t"
+            "movl scr_loc, %ebx\n\t"
+            "shl $1, %ebx\n\t"
+            "movb %al, %gs:(%ebx)\n\t"
+            "shr $1, %ebx\n\t"
+            "incl %ebx\n\t"
+            "cmpl $2000, %ebx\n\t"
+            "jb 1f\n\t"
+            "movl $0, %ebx\n\t"
+            "1:	movl %ebx, scr_loc	\n\t"
+            "popl %ebx\n\t"
+            "pop %gs\n\t"
+            "ret\n\t");
+}
+
 
 void IDT::init(){
     DT *p = (DT*)Memory::get_free_page();
@@ -108,4 +127,7 @@ void kmain(void){
     IDT::init();
     GDT::init();
     move_to_user_mode();
+    if(Schedule::fork()!=0){
+        while(1) printk("a");
+    }
 }
