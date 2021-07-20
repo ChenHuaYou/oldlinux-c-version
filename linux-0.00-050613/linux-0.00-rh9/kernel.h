@@ -112,5 +112,6 @@ class String{
         static int strncmp( const char* s1, const char* s2, int c );
         static void itoa(char *buf, unsigned long int n, int base);
 };
+extern String string;
 
 #endif

@@ -76,8 +76,6 @@ class Io
 		static Io*	last_io;
 		
 	private:
-
-	
 	
 		/** x86 private attributes **/
 		char*	real_screen;
