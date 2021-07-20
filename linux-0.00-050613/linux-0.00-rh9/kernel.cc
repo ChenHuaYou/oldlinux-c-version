@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "io.h"
 
 
 void IO::write_char(char c){
@@ -35,7 +36,7 @@ void IDT::init(){
     p[0x8].w0 = (u32)timer_interrupt;
     p[0x80].w0 = (u32)system_interrupt;
     p[0x80].w2 = 0xEF00;
-    __asm__ __volatile__ ("lidt %[idtr]"::[idtr]"a"(&idtr));
+    __asm__ __volatile__ ("lidt (%[idtr])"::[idtr]"a"(&idtr));
 }
 
 void GDT::init(){
@@ -84,7 +85,10 @@ void GDT::init(){
     //gdt[7] = {sizeof(task[1].tss), (u16)(long)(&task[1].tss), 0xe900, 0x0000};/* TSS1 descr 7*8+0=0x38 */
 
     gdtr = {256*sizeof(DT),(u32)p};
-    __asm__ __volatile__ ("lgdt %[gdtr]"::[gdtr]"a"(gdtr));
+    __asm__ __volatile__ (
+            "lgdt (%[gdtr])\n\t"
+            ::[gdtr]"a"(&gdtr)
+            );
 
     count = 6;
 }
@@ -118,6 +122,7 @@ void setup_paging(const u32 *pg_dir, u16 pg_num){
 u8 Schedule::fork(){
 
 
+    return 1;
 }
 
 
@@ -128,6 +133,6 @@ void kmain(void){
     GDT::init();
     move_to_user_mode();
     if(Schedule::fork()!=0){
-        while(1) printk("a");
+        while(1) io.putc('a');
     }
 }

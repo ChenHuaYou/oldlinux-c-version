@@ -1,4 +1,6 @@
 #include "io.h"
+#include "kernel.h"
+#include "stdarg.h"
 
 Io* Io::last_io=&io;		/* definis la derniere io avant switch */
 Io* Io::current_io=&io;		/* interface actuel (clavier redirig� vers celle ci) */
@@ -82,13 +84,13 @@ void Io::scrollup(unsigned int n)
 
 /* sauvegarde la memoire video */
 void Io::save_screen(){
-	memcpy(screen,(char*)RAMSCREEN,SIZESCREEN);
+    String::memcpy(screen,(char*)RAMSCREEN,SIZESCREEN);
 	real_screen=(char*)screen;
 }
 
 /* charge la memoire video */
 void Io::load_screen(){
-	memcpy((char*)RAMSCREEN,screen,SIZESCREEN);
+    String::memcpy((char*)RAMSCREEN,screen,SIZESCREEN);
 	real_screen=(char*)RAMSCREEN;
 }
 
@@ -147,7 +149,7 @@ void Io::setXY(char xc,char yc){
 void Io::clear(){
 	x=0;
 	y=0;
-	memset((char*)RAMSCREEN,0,SIZESCREEN);
+    String::memset((char*)RAMSCREEN,0,SIZESCREEN);
 }
 
 /* put a string in screen */
@@ -183,9 +185,9 @@ void Io::print(const char *s, ...){
 					neg++;
 				} else
 					uival = ival;
-				itoa(buf, uival, 10);
+				String::itoa(buf, uival, 10);
 
-				buflen = strlen(buf);
+				buflen = String::strlen(buf);
 				if (buflen < size)
 					for (i = size, j = buflen; i >= 0;
 					     i--, j--)
@@ -200,9 +202,9 @@ void Io::print(const char *s, ...){
 			}
 			 else if (c == 'u') {
 				uival = va_arg(ap, int);
-				itoa(buf, uival, 10);
+				String::itoa(buf, uival, 10);
 
-				buflen = strlen(buf);
+				buflen = String::strlen(buf);
 				if (buflen < size)
 					for (i = size, j = buflen; i >= 0;
 					     i--, j--)
@@ -213,9 +215,9 @@ void Io::print(const char *s, ...){
 				print(buf);
 			} else if (c == 'x' || c == 'X') {
 				uival = va_arg(ap, int);
-				itoa(buf, uival, 16);
+				String::itoa(buf, uival, 16);
 
-				buflen = strlen(buf);
+				buflen = String::strlen(buf);
 				if (buflen < size)
 					for (i = size, j = buflen; i >= 0;
 					     i--, j--)
@@ -226,10 +228,10 @@ void Io::print(const char *s, ...){
 				print("0x%s", buf);
 			} else if (c == 'p') {
 				uival = va_arg(ap, int);
-				itoa(buf, uival, 16);
+				String::itoa(buf, uival, 16);
 				size = 8;
 
-				buflen = strlen(buf);
+				buflen = String::strlen(buf);
 				if (buflen < size)
 					for (i = size, j = buflen; i >= 0;
 					     i--, j--)
@@ -286,6 +288,6 @@ u32 Io::read(char* buf,u32 count){
 	inlock=1;
 	while (inlock == 1);
 	asm("cli");
-	strncpy(buf,inbuf,count);
-	return strlen(buf);
+    String::strncpy(buf,inbuf,count);
+	return String::strlen(buf);
 }

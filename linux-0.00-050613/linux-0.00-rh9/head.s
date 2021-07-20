@@ -46,40 +46,6 @@ startup_32:
     pushl $kmain
     jmp setup_paging
 
-# setup base fields of descriptors.
-	call setup_idt
-	call setup_gdt
-	movl $0x10,%eax		# reload all the segment registers
-	mov %ax,%ds		# after changing gdt. 
-	mov %ax,%es
-	mov %ax,%fs
-	mov %ax,%gs
-	lss init_stack,%esp
-
-
-    pushw $2
-    pushl $pg_dir
-    pushl $move_to_user_mode
-    jmp setup_paging
-
-move_to_user_mode:
-# Move to user mode (task 0)
-	pushfl
-	andl $0xffffbfff, (%esp)
-	popfl
-	movl $TSS0_SEL, %eax
-	ltr %ax
-	movl $LDT0_SEL, %eax
-	lldt %ax 
-	movl $0, current
-	sti
-	pushl $0x17
-	pushl $init_stack
-	pushfl
-	pushl $0xf
-	pushl $task0
-	iret
-
 
 /***********************************************/
 /* This is the default interrupt "handler" :-) */

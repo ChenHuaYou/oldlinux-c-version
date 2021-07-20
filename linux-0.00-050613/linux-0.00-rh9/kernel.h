@@ -1,10 +1,15 @@
+#ifndef KERNEL_H
+#define KERNEL_H
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned long u32;
 typedef unsigned long long u64;
+typedef char *va_list;
 #define LDT0_SEL 0x28
 #define LDT1_SEL 0x38
 #define asmv 		__asm__ __volatile__
+#define NULL 0
 
 
 //descriptor table register
@@ -93,3 +98,19 @@ class IO{
     public:
         static void write_char(char c);
 };
+
+class String{
+
+    public:
+        static void *memcpy(char *dst, char *src, int n);
+        static void *memset(char *dst,char src, int n);
+        static int strlen(char *s);
+        static char *strncpy(char *destString, const char *sourceString,int maxLength);
+        static int strcmp(const char *dst, char *src);
+        static int strcpy(char *dst,const char *src);
+        static void strcat(void *dest,const void *src);
+        static int strncmp( const char* s1, const char* s2, int c );
+        static void itoa(char *buf, unsigned long int n, int base);
+};
+
+#endif
