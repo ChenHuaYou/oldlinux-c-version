@@ -1,4 +1,3 @@
-#include "io.h"
 #include "kernel.h"
 #include "stdarg.h"
 

@@ -9,6 +9,13 @@ CC	=gcc -march=i386 -m32
 CFLAGS	=-Wall -O1 -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I./ -fno-stack-protector -fno-builtin -g
 
+.cc.o:
+	$(CC) $(CFLAGS) \
+	-c -o $*.o $<
+.s.o:
+	$(AS) -c -o $*.o $<
+
+
 
 all:	Image
 
@@ -17,17 +24,8 @@ Image: boot system
 	objcopy -O binary system head
 	cat head >> Image
 
-disk: Image
-	dd bs=8192 if=Image of=/dev/fd0
-	sync;sync;sync
-
-head.o: head.s
-
-kernel.o: kernel.cc
-	$(CC) $(CFLAGS) -c -o kernel.o kernel.cc
-
-system:	head.o kernel.o
-	$(LD) $(LDFLAGS) head.o kernel.o -o system > System.map
+system:	head.o kernel.o io.o string.o
+	$(LD) $(LDFLAGS) head.o kernel.o io.o string.o -o system > System.map
 
 boot:	boot.s
 	$(AS86) -o boot.o boot.s

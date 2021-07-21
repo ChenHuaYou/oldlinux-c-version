@@ -1,33 +1,53 @@
 #include "kernel.h"
-#include "io.h"
+
+Io io;
+Memory memory;
+IDT idt;
+GDT gdt;
+Task task;
 
 
-void IO::write_char(char c){
-    __asm__ __volatile__(
-            "push %gs \n\t"
-            "pushl %ebx \n\t"
-            "mov $SCRN_SEL, %ebx\n\t"
-            "mov %bx, %gs\n\t"
-            "movl scr_loc, %ebx\n\t"
-            "shl $1, %ebx\n\t"
-            "movb %al, %gs:(%ebx)\n\t"
-            "shr $1, %ebx\n\t"
-            "incl %ebx\n\t"
-            "cmpl $2000, %ebx\n\t"
-            "jb 1f\n\t"
-            "movl $0, %ebx\n\t"
-            "1:	movl %ebx, scr_loc	\n\t"
-            "popl %ebx\n\t"
-            "pop %gs\n\t"
-            "ret\n\t");
+void Task::init(void){
+    TSS *p = (TSS*)memory.get_free_page();
+    //*p = {
+    //    0,/* back link */
+    //    p+4096, 0x10,		/* esp0, ss0 */
+    //    0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
+    //    0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
+    //    0, 0, 0, 0, 0,		/* ebx esp, ebp, esi, edi */
+    //    0, 0, 0, 0, 0, 0, 		/* es, cs, ss, ds, fs, gs */
+    //    LDT0_SEL, 0x8000000/* ldt, trace bitmap */
+    //};
+    p->back_link = 0;
+    p->esp0 = (u32)((char*)p + 4096);
+    p->ss0 = 0x10;
+    p->ldt = LDT0_SEL;
+    p->trace_bitmap = 0x8000000;
+    tss[0] = p;
+
+    //gdt[6] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 6*8+0=0x30 */
+    gdt.addDescription(sizeof(TSS), (u32)p, 0xe900, 0x0);
+
+    asmv(
+            "ltr (%[tss0_sel])"::[tss0_sel]"a"(0x30)
+        );
 }
 
+u8 Task::fork(void){
+    TSS *p = (TSS*)memory.get_free_page();
+    return 1;
+}
+
+void IDT::ignore_int(void){
+    io.putc('c');
+    asmv("iret");
+}
 
 void IDT::init(){
-    DT *p = (DT*)Memory::get_free_page();
+    DT *p = (DT*)memory.get_free_page();
     idtr = {256*sizeof(DT),(u32)p};
     for(int i=0; i<256; i++){
-        p[i].w0 = (u32)ignore_int & 0x0000FFFF;
+        p[i].w0 = (u32)(ignore_int) & 0x0000FFFF;
         p[i].w1 = 0x0008;
         p[i].w2 = 0x8E00;
         p[i].w3 = 0x0;
@@ -36,11 +56,21 @@ void IDT::init(){
     p[0x8].w0 = (u32)timer_interrupt;
     p[0x80].w0 = (u32)system_interrupt;
     p[0x80].w2 = 0xEF00;
-    __asm__ __volatile__ ("lidt (%[idtr])"::[idtr]"a"(&idtr));
+    asmv ("lidt (%[idtr])"::[idtr]"a"(&idtr));
 }
 
+void IDT::timer_interrupt(void){
+
+    asmv("iret");
+}
+
+void IDT::system_interrupt(void){
+
+}
+
+
 void GDT::init(){
-    DT *p = (DT*)Memory::get_free_page();
+    DT *p = (DT*)memory.get_free_page();
 
 //    task[0]=
 //    {
@@ -93,9 +123,40 @@ void GDT::init(){
     count = 6;
 }
 
+void GDT::addDescription(u16 w0, u16 w1, u16 w2, u16 w3){
+    DT *p = (DT *)gdtr.base;
+    p[++count] = {w0, w1, w2, w3};
+}
 
-extern "C"
-void setup_paging(const u32 *pg_dir, u16 pg_num){
+
+#define LOW_MEM 0x100000 // 1M
+#define MAX_MEM 0x1000000 // 16M
+#define PAGING_PAGES ((MAX_MEM-LOW_MEM)/(0x1000))
+#define BUF_PAGES 896
+
+u8 mm_map[PAGING_PAGES] = {0};
+
+void Memory::init(void){
+    for(int i=0;i<BUF_PAGES;i++){
+        mm_map[i] = 1;
+    }
+    for(int i=BUF_PAGES;i<PAGING_PAGES;i++){
+        mm_map[i] = 0;
+    }
+    setup_paging(0, 4);
+}
+
+u32 Memory::get_free_page(void){
+    for(int i=BUF_PAGES; i<PAGING_PAGES;i++){
+        if(mm_map[i]==0){
+            mm_map[i] = 1;
+            return i;
+        }
+    }
+    return 0;
+}
+
+void Memory::setup_paging(const u32 *pg_dir, u16 pg_num){
     u32 *p = (u32 *)pg_dir;
     // set 1(dir table)+4(page table) to 0
     for(int i=0; i<1024*(1+pg_num); i++){
@@ -119,20 +180,14 @@ void setup_paging(const u32 *pg_dir, u16 pg_num){
             );
 }
 
-u8 Schedule::fork(){
-
-
-    return 1;
-}
-
 
 extern "C"
 void kmain(void){
-    Memory::init();
-    IDT::init();
+    memory.init();
+    idt.init();
     gdt.init();
-    move_to_user_mode();
-    if(Schedule::fork()!=0){
+    task.init();
+    if(task.fork()!=0){
         while(1) io.putc('a');
     }
 }
