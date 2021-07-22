@@ -9,27 +9,26 @@ Task task;
 
 void Task::init(void){
     TSS *p = (TSS*)memory.get_free_page();
-    //*p = {
-    //    0,/* back link */
-    //    p+4096, 0x10,		/* esp0, ss0 */
-    //    0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-    //    0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
-    //    0, 0, 0, 0, 0,		/* ebx esp, ebp, esi, edi */
-    //    0, 0, 0, 0, 0, 0, 		/* es, cs, ss, ds, fs, gs */
-    //    LDT0_SEL, 0x8000000/* ldt, trace bitmap */
-    //};
     p->back_link = 0;
     p->esp0 = (u32)((char*)p + 4096);
     p->ss0 = 0x10;
-    p->ldt = LDT0_SEL;
+    p->cr3 = 0x0;
+    p->es = 0x2b;
+    p->cs = 0x23;
+    p->ss = 0x2b;
+    p->ds = 0x2b;
+    p->fs = 0x2b;
+    p->gs = 0x2b;
     p->trace_bitmap = 0x8000000;
     tss[0] = p;
 
-    //gdt[6] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 6*8+0=0x30 */
     gdt.addDescription(sizeof(TSS), (u32)p, 0xe900, 0x0);
 
     asmv(
-            "ltr (%[tss0_sel])"::[tss0_sel]"a"(0x30)
+            "ltr (%[tss0_sel])\n\t"
+            "sti\n\t"
+            "iret\n\t"
+            ::[tss0_sel]"a"(0x30)
         );
 }
 
@@ -60,7 +59,7 @@ void IDT::init(){
 }
 
 void IDT::timer_interrupt(void){
-
+    io.putc('a');
     asmv("iret");
 }
 
@@ -186,8 +185,7 @@ void kmain(void){
     memory.init();
     idt.init();
     gdt.init();
-    task.init();
-    if(task.fork()!=0){
-        while(1) io.putc('a');
-    }
+    //task.init();
+    
+    while(1) io.putc('a');
 }
