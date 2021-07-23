@@ -38,7 +38,7 @@ u8 Task::fork(void){
 }
 
 void IDT::ignore_int(void){
-    io.putc('c');
+    //io.putc('c');
     asmv("iret");
 }
 
@@ -59,81 +59,36 @@ void IDT::init(){
 }
 
 void IDT::timer_interrupt(void){
-    io.putc('a');
+    //io.putc('a');
     asmv("iret");
 }
 
 void IDT::system_interrupt(void){
-
+    asmv("iret");
 }
 
 
 void GDT::init(){
-    DT *p = (DT*)memory.get_free_page();
+    base = (DT*)memory.get_free_page();
 
-//    task[0]=
-//    {
-//        {
-//            0,/* back link */
-//            (long)(&task[0].kstack+sizeof(task[0].kstack)), 0x10,		/* esp0, ss0 */
-//            0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-//            0, 0, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
-//            0, 0, 0, 0, 0,		/* ebx esp, ebp, esi, edi */
-//            0, 0, 0, 0, 0, 0, 		/* es, cs, ss, ds, fs, gs */
-//            LDT0_SEL, 0x8000000/* ldt, trace bitmap */
-//        },	    
-//    };
-//    task[1]={
-//        {
-//            {0x0000,0x0000,0x0000,0x0000},
-//            {0x03ff,0x0000,0xfa00,0x00c0},
-//            {0x03ff,0x0000,0xf200,0x00c0},
-//        },
-//        {
-//            0,/* back link */
-//            (long)(&task[1].kstack+sizeof(task[1].kstack)), 0x10,		/* esp0, ss0 */
-//            0, 0, 0, 0, 0,		/* esp1, ss1, esp2, ss2, cr3 */
-//            (long)task1, 0x200, 0, 0, 0,		/* eip, eflags, eax, ecx, edx */
-//            0, (long)(&task[1].ustack+sizeof(task[1].ustack)), 0, 0, 0,		/* ebx esp, ebp, esi, edi */
-//            0x17, 0x0f, 0x17, 0x17, 0x17, 0x17, 		/* es, cs, ss, ds, fs, gs */
-//            LDT1_SEL, 0x8000000/* ldt, trace bitmap */
-//        },	    
-//    };
-//
-    p[0] = {0x0000,0x0000,0x0000,0x0000};/* NULL descriptor */
+    addDescription(0x0000,0x0000,0x0000,0x0000);/* NULL descriptor */
 
-    p[1] = {0x07ff,0x0000,0x9a00,0x00c0};/* 8Mb 0x08 = 1*8+0, base = 0x00000 */
-    p[2] = {0x07ff,0x0000,0x9200,0x00c0};/* 8Mb 0x10 = 2*8+0 */
+    addDescription(0x0fff,0x0000,0x9a00,0x00c0);/* 16Mb 0x08 = 1*8+0, base = 0x00000 */
+    addDescription(0x0fff,0x0000,0x9200,0x00c0);/* 16Mb 0x10 = 2*8+0 */
 
-    p[3] = {0x0002,0x8000,0x920b,0x00c0};/* screen 0x18 = 3*8+0 for display */
+    addDescription(0x03ff,0x0000,0xfa00,0x00c0); /* user code 3*8+3 = 0x1b */
+    addDescription(0x03ff,0x0000,0xf200,0x00c0);/* user data 4*8+3 = 0x2b */
 
-    p[4] = {0x03ff,0x0000,0xfa00,0x00c0}; /* user code 4*8+3 = 0x23 */
-    p[5] = {0x03ff,0x0000,0xf200,0x00c0};/* user data 5*8+3 = 0x2b */
-
-    //gdt[6] = {sizeof(task[0].tss), (u16)(long)(&task[0].tss), 0xe900, 0x0000};/* TSS0 descr 6*8+0=0x30 */
-    //gdt[7] = {sizeof(task[1].tss), (u16)(long)(&task[1].tss), 0xe900, 0x0000};/* TSS1 descr 7*8+0=0x38 */
-
-    gdtr = {256*sizeof(DT),(u32)p};
+    gdtr = {256*sizeof(DT),(u32)base};
     __asm__ __volatile__ (
             "lgdt (%[gdtr])\n\t"
             ::[gdtr]"a"(&gdtr)
             );
-
-    count = 6;
 }
 
 void GDT::addDescription(u16 w0, u16 w1, u16 w2, u16 w3){
-    DT *p = (DT *)gdtr.base;
-    p[++count] = {w0, w1, w2, w3};
+    base[count++] = {w0, w1, w2, w3};
 }
-
-
-#define LOW_MEM 0x100000 // 1M
-#define MAX_MEM 0x1000000 // 16M
-#define PAGING_PAGES ((MAX_MEM-LOW_MEM)/(0x1000))
-#define BUF_PAGES 896
-
-u8 mm_map[PAGING_PAGES] = {0};
 
 void Memory::init(void){
     for(int i=0;i<BUF_PAGES;i++){
@@ -149,7 +104,7 @@ u32 Memory::get_free_page(void){
     for(int i=BUF_PAGES; i<PAGING_PAGES;i++){
         if(mm_map[i]==0){
             mm_map[i] = 1;
-            return i;
+            return LOW_MEM + i * 4096;
         }
     }
     return 0;
@@ -170,13 +125,13 @@ void Memory::setup_paging(const u32 *pg_dir, u16 pg_num){
         *(p+1024+i) = 0x0 + i*0x1000 + 0x7;
         //*(p+i) = 0x0 + i*0x1000 + 0x7;
     }
-    __asm__ __volatile__(
+    asmv(
             "movl %[pg_dir],%%cr3\n\t"
             "movl %%cr0,%%eax\n\t"
             "orl $0x80000000,%%eax\n\t"
             "movl %%eax,%%cr0\n\t"
             ::[pg_dir]"a"(pg_dir)
-            );
+        );
 }
 
 
@@ -185,7 +140,14 @@ void kmain(void){
     memory.init();
     idt.init();
     gdt.init();
-    //task.init();
-    
-    while(1) io.putc('a');
+    asmv(
+            "movl $0x10,%eax\n\t"
+            "mov %ax,%ds\n\t"
+            "mov %ax,%es\n\t"
+            "mov %ax,%fs\n\t"
+            "mov %ax,%gs\n\t"
+            "ljmp $0x08, $next\n\t"
+            "next: \n\t"
+        );
+    while(1) io.putc('A');
 }

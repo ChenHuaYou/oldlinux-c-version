@@ -43,11 +43,8 @@ startup_32:
 	lss init_stack,%esp
     jmp kmain
 
-current:.long 0
-scr_loc:.long 0
 
 .fill 128,4,0
 init_stack:                          # Will be used as user stack for task0.
 	.long init_stack
 	.word 0x10
-

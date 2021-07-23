@@ -62,18 +62,27 @@ class Task{
 };
 extern Task task;
 
+
+#define LOW_MEM 0x100000 // 1M
+#define MAX_MEM 0x1000000 // 16M
+#define PAGING_PAGES ((MAX_MEM-LOW_MEM)/(0x1000))
+#define BUF_PAGES 896
+
+
 class Memory{
     public:
         void init(void);
         u32 get_free_page(void);
     private:
         void setup_paging(const u32 *pg_dir, u16 pg_num);
+        u8 mm_map[PAGING_PAGES] = {0};
 };
 extern Memory memory;
 
 class GDT{
     u8 count;
     DTR gdtr;
+    DT * base;
     public:
         void init(void);
         void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
@@ -92,8 +101,8 @@ class IDT{
 extern IDT idt;
 
 
-#define RAMSCREEN 0xB8000	/* debut de la memoire video */
-#define SIZESCREEN 0xFA0	/* 4000, nombres d'octets d'une page texte */
+#define RAMSCREEN 0xB8000
+#define SIZESCREEN 0xFA0
 #define SCREENLIM 0xB8FA0
 
 /** Input/output class **/
@@ -106,9 +115,8 @@ class Io
 		void	print(const char *s, ...);	/* put a string in screen */
 		
 	private:
-        u32 scr_loc;
-        u16 SCRN_SEL;
-		
+        u16 scr_loc = 0;
+        char *screen = (char *)RAMSCREEN;
 };
 
 /** standart starting io interface **/

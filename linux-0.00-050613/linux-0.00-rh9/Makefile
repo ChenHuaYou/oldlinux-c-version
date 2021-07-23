@@ -6,7 +6,7 @@ LD	=ld
 LDFLAGS =-m elf_i386 -Ttext 0 -e startup_32
 
 CC	=gcc -march=i386 -m32
-CFLAGS	=-Wall -O1 -fstrength-reduce -fomit-frame-pointer \
+CFLAGS	=-Wall -O0 -fstrength-reduce -fomit-frame-pointer \
 	-finline-functions -nostdinc -I./ -fno-stack-protector -fno-builtin -g
 
 .cc.o:
