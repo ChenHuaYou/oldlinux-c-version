@@ -80,62 +80,60 @@ u8 Scheduler::fork(void){
         }
     }
     if(i==256) return -1;
+    Task *p;
+
+    asmv(
+            "push %%ebp\n\t"
+            "push %%eax\n\t"
+            "push %%ecx\n\t"
+            "push %%edx\n\t"
+            "push %%ebx\n\t"
+            "push %%esi\n\t"
+            "push %%edi\n\t"
+            "push %%es\n\t"
+            "push %%ds\n\t"
+            "push %%fs\n\t"
+            "push %%gs\n\t"
+            "call (%[copy_process])\n\t"
+            "add 0x40,%%esp\n\t"
+            "mov %%eax,%[p]"
+            :[p]"=m"(p):[copy_process]"a"(copy_process)
+        );
+
+
+    return 1;
+}
+
+Task * Scheduler::copy_process(u32 gs, u32 fs, u32 ds, u32 es, u32 edi, 
+        u32 esi, u32 ebx, u32 edx, u32 ecx, u32 eax, u32 ebp, u32 eip, u32 cs,u32 eflags,u32 esp, u32 ss){
     Task *p = (Task *)memory.get_free_page();
-    task[i] = p;
 
     p->tss.back_link = 0;
     p->tss.esp0 = (u32)((char*)p + 4096);
     p->tss.ss0 = 0x10;
 
-    asmv(
-            "push %%eip\n\t"
-            "pushfl\n\t"
-            "push %%eax\n\t"
-            "push %%ecx\n\t"
-            "push %%edx\n\t"
-            "push %%ebx\n\t"
-            "push %%esp\n\t"
-            "push %%esi\n\t"
-            "push %%edi\n\t"
-            "push %%es\n\t"
-            "push %%cs\n\t"
-            "push %%ss\n\t"
-            "push %%ds\n\t"
-            "push %%fs\n\t"
-            "push %%gs\n\t"
-            "mov 56(%%esp),%[eip]\n\t"
-            "mov 52(%%esp),%[eflags]\n\t"
-            "mov 48(%%esp),%[eax]\n\t"
-            "mov 44(%%esp),%[ecx]\n\t"
-            "mov 40(%%esp),%[edx]\n\t"
-            "mov 36(%%esp),%[ebx]\n\t"
-            "mov 32(%%esp),%[esp]\n\t"
-            "mov 28(%%esp),%[esi]\n\t"
-            "mov 24(%%esp),%[edi]\n\t"
-            "mov 20(%%esp),%[es]\n\t"
-            "mov 16(%%esp),%[cs]\n\t"
-            "mov 12(%%esp),%[ss]\n\t"
-            "mov 8(%%esp),%[ds]\n\t"
-            "mov 4(%%esp),%[fs]\n\t"
-            "mov 0(%%esp),%[gs]\n\t"
-            :[eip]"=&r"(p->tss.eip),
-        [eflags]"=&r"(p->tss.eflags),
-        [eax]"=&r"(p->tss.eax),
-        [ecx]"=&r"(p->tss.ecx),
-        [edx]"=&r"(p->tss.edx),
-        [ebx]"=&r"(p->tss.ebx),
-        [esp]"=&r"(p->tss.esp),
-        [esi]"=&m"(p->tss.esi),
-        [edi]"=&m"(p->tss.edi),
-        [es]"=&m"(p->tss.es),
-        [cs]"=&m"(p->tss.cs),
-        [ss]"=&m"(p->tss.ss),
-        [ds]"=&m"(p->tss.ds),
-        [fs]"=&m"(p->tss.fs),
-        [gs]"=&m"(p->tss.gs));
 
-    return 1;
+	p->tss.eip = eip;
+	p->tss.eflags = eflags;
+	p->tss.eax = 0;
+	p->tss.ecx = ecx;
+	p->tss.edx = edx;
+	p->tss.ebx = ebx;
+	p->tss.esp = esp;
+	p->tss.ebp = ebp;
+	p->tss.esi = esi;
+	p->tss.edi = edi;
+	p->tss.es = es & 0xffff;
+	p->tss.cs = cs & 0xffff;
+	p->tss.ss = ss & 0xffff;
+	p->tss.ds = ds & 0xffff;
+	p->tss.fs = fs & 0xffff;
+	p->tss.gs = gs & 0xffff;
+
+    return p;
+
 }
+
 
 void IDT::ignore_int(void){
     //io.putc('c');

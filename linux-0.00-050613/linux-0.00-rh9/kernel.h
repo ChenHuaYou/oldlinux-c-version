@@ -69,6 +69,9 @@ class Scheduler{
         Task *task[256]={0};
         u8 current=0;
         u8 amount=0;
+        static Task * copy_process(u32 gs, u32 fs, u32 ds, u32 es, u32 edi, 
+                u32 esi, u32 ebx, u32 edx, u32 ecx, u32 eax, u32 ebp, u32 eip, u32 cs,u32 eflags,u32 esp, u32 ss);
+
 };
 extern Scheduler sched;
 
@@ -86,6 +89,7 @@ class Memory{
     private:
         void setup_paging(const u32 *pg_dir, u16 pg_num);
         u8 mm_map[PAGING_PAGES] = {0};
+
 };
 extern Memory memory;
 
