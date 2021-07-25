@@ -73,40 +73,17 @@ void Scheduler::init(void){
 }
 
 u8 Scheduler::fork(void){
+    int i;
+    for(i=0;i<256; i++){
+        if(task[i]==0) {
+            break;
+        }
+    }
+    if(i==256) return -1;
     Task *p = (Task *)memory.get_free_page();
-    task[0] = p;
+    task[i] = p;
 
-    p->ldt[0] = {0x0000,0x0000,0x0000,0x0000};
-    p->ldt[1]={0x0fff,0x0000,0xfa00,0x00c0};
-    p->ldt[2]={0x0fff,0x0000,0xf200,0x00c0};
-
-    p->tss.back_link = 0;
-    p->tss.esp0 = (u32)((char*)p + 4096);
-    p->tss.ss0 = 0x10;
-    p->tss.esp1 = 0;
-    p->tss.ss1 = 0;
-    p->tss.esp2 = 0;
-    p->tss.ss2 = 0;
-    p->tss.cr3 = 0x0;
-    p->tss.eip = 0;
-    p->tss.eflags = 0;
-    p->tss.eax = 0;
-    p->tss.ecx = 0;
-    p->tss.edx = 0;
-    p->tss.ebx = 0;
-    p->tss.esp = 0;
-    p->tss.esi = 0;
-    p->tss.edi = 0;
-    p->tss.es = 0;
-    p->tss.cs = 0;
-    p->tss.ss = 0;
-    p->tss.ds = 0;
-    p->tss.fs = 0;
-    p->tss.gs = 0;
-    p->tss.ldt = 32;
-    p->tss.trace_bitmap = 0x8000000;
-
-    amount ++;
+    string.memcpy((char *)p, (char *)task[current], sizeof(Task));
 
     return 1;
 }

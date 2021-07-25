@@ -66,7 +66,7 @@ class Scheduler{
         u8 fork(void);
         void init(void);
     private:
-        Task *task[256];
+        Task *task[256]={0};
         u8 current=0;
         u8 amount=0;
 };
