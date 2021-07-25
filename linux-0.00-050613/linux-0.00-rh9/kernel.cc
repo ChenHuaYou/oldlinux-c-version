@@ -118,22 +118,21 @@ u8 Scheduler::fork(void){
             "mov 8(%%esp),%[ds]\n\t"
             "mov 4(%%esp),%[fs]\n\t"
             "mov 0(%%esp),%[gs]\n\t"
-            : [eip]"=m"(p->tss.eip),
-            [eflags]"=m"(p->tss.eflags),
-            [eax]"=m"(p->tss.eax),
-            [ecx]"=m"(p->tss.ecx),
-            [edx]"=m"(p->tss.edx),
-            [ebx]"=m"(p->tss.ebx),
-            [esp]"=m"(p->tss.esp),
-            [esi]"=m"(p->tss.esi),
-            [edi]"=m"(p->tss.edi),
-            [es]"=m"(p->tss.es),
-            [cs]"=m"(p->tss.cs),
-            [ss]"=m"(p->tss.ss),
-            [ds]"=m"(p->tss.ds),
-            [fs]"=m"(p->tss.fs),
-            [gs]"=m"(p->tss.gs)
-        );
+            :[eip]"=&r"(p->tss.eip),
+        [eflags]"=&r"(p->tss.eflags),
+        [eax]"=&r"(p->tss.eax),
+        [ecx]"=&r"(p->tss.ecx),
+        [edx]"=&r"(p->tss.edx),
+        [ebx]"=&r"(p->tss.ebx),
+        [esp]"=&r"(p->tss.esp),
+        [esi]"=&m"(p->tss.esi),
+        [edi]"=&m"(p->tss.edi),
+        [es]"=&m"(p->tss.es),
+        [cs]"=&m"(p->tss.cs),
+        [ss]"=&m"(p->tss.ss),
+        [ds]"=&m"(p->tss.ds),
+        [fs]"=&m"(p->tss.fs),
+        [gs]"=&m"(p->tss.gs));
 
     return 1;
 }
