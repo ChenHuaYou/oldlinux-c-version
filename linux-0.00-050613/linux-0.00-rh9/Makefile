@@ -7,7 +7,7 @@ LDFLAGS =-m elf_i386 -Ttext 0 -e startup_32
 
 CC	=gcc -march=i386 -m32
 CFLAGS	=-Wall -O0 -fstrength-reduce -fomit-frame-pointer \
-	-finline-functions -nostdinc -I./ -fno-stack-protector -fno-builtin -g
+	-finline-functions -nostdinc -I./ -fno-stack-protector -fno-builtin -g -mgeneral-regs-only
 
 .cc.o:
 	$(CC) $(CFLAGS) \
@@ -25,7 +25,8 @@ Image: boot system
 	cat head >> Image
 
 system:	head.o kernel.o io.o string.o
-	$(LD) $(LDFLAGS) head.o kernel.o io.o string.o -o system > System.map
+	$(LD) $(LDFLAGS) head.o kernel.o io.o string.o -o system
+	nm system | grep -v '\(compiled\)\|\(\.o$$\)\|\( [aU] \)\|\(\.\.ng$$\)\|\(LASH[RL]DI\)'| sort > System.map
 
 boot:	boot.s
 	$(AS86) -o boot.o boot.s

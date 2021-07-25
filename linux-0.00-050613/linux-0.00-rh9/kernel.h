@@ -11,7 +11,11 @@ typedef char *va_list;
 #define asmv __asm__ __volatile__
 #define NULL 0
 
-
+struct interrupt_frame{
+    u32 eip;
+    u32 cs;
+    u32 eflags;
+};
 //descriptor table register
 struct DTR{
     u16 limit;
@@ -50,17 +54,23 @@ struct TSS {
 	long	trace_bitmap;	/* bits: trace 0, bitmap 16-31 */
 }__attribute__((packed));
 
+struct Task {
+    DT ldt[3];
+    TSS tss;
+};
 
-class Task{
+
+class Scheduler{
     public:
         void switch_to_next(void);
         u8 fork(void);
         void init(void);
     private:
-        TSS *tss[256];
+        Task *task[256];
         u8 current=0;
+        u8 amount=0;
 };
-extern Task task;
+extern Scheduler sched;
 
 
 #define LOW_MEM 0x100000 // 1M
@@ -95,7 +105,7 @@ class IDT{
         void init(void);
         void addDescription(u16 w0, u16 w1, u16 w2, u16 w3);
         static void ignore_int(void);
-        static void timer_interrupt(void);
+        static __attribute__ ((interrupt)) void timer_interrupt(interrupt_frame *);
         static void system_interrupt(void);
 };
 extern IDT idt;
@@ -111,7 +121,7 @@ class Io
 	public:
 	
 		Io();
-		void	putc(char c);				/* put a byte on screen */
+		void	putc(char c, u8 color);				/* put a byte on screen */
 		void	print(const char *s, ...);	/* put a string in screen */
 		
 	private:
